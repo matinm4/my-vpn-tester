@@ -1,0 +1,86 @@
+name: کشف کانفیگ
+
+# دور کامل: تلگرام + لینک‌های ساب → کانفیگ جدید → تست پینگ واقعی.
+# سنگین‌تر از بازبینی استخر؛ با batch_test_size معمولاً ۴۰ تا ۶۰ دقیقه.
+on:
+  schedule:
+    - cron: "17 */6 * * *"      # هر ۶ ساعت (دقیقه ۱۷ تا با نیم‌ساعتی‌ها تصادم نکند)
+  workflow_dispatch:
+    inputs:
+      max_test:
+        description: "حداکثر کانفیگ تست‌شده (خالی = مقدار config.ci.yaml)"
+        required: false
+        type: string
+      skip_telegram:
+        description: "تلگرام رد شود"
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  # اگر اجرای دیگری هنوز تمام نشده، این یکی صبر می‌کند. بدون این، دو اجرا
+  # همزمان روی شاخه‌ی data می‌نویسند و حافظه خراب می‌شود.
+  group: vtester-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write                # برای نوشتن شاخه‌ی data
+
+jobs:
+  discover:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: نصب وابستگی‌ها
+        run: pip install -q -r requirements.txt
+
+      - name: نصب هسته‌ی Xray
+        uses: ./.github/actions/setup-xray
+
+      - name: ساخت تنظیمات از سکرت‌ها
+        env:
+          VT_TELEGRAM_API_ID: ${{ secrets.VT_TELEGRAM_API_ID }}
+          VT_TELEGRAM_API_HASH: ${{ secrets.VT_TELEGRAM_API_HASH }}
+          VT_TELEGRAM_SESSION: ${{ inputs.skip_telegram && '' || secrets.VT_TELEGRAM_SESSION }}
+          VT_TELEGRAM_CHANNELS: ${{ secrets.VT_TELEGRAM_CHANNELS }}
+        run: bash scripts/make-config.sh
+
+      - name: بازیابی حافظه
+        env:
+          VT_STATE_PASSPHRASE: ${{ secrets.VT_STATE_PASSPHRASE }}
+        run: bash scripts/state.sh pull
+
+      - name: دور کشف
+        run: |
+          args=(--once --skip-gate)
+          if [ -n "${{ inputs.max_test }}" ]; then
+            args+=(--max-test "${{ inputs.max_test }}")
+          fi
+          python live.py "${args[@]}"
+
+      - name: ذخیره‌ی حافظه
+        if: always()
+        env:
+          VT_STATE_PASSPHRASE: ${{ secrets.VT_STATE_PASSPHRASE }}
+        run: bash scripts/state.sh push
+
+      - name: بارگذاری خروجی‌ها
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: discovery-${{ github.run_number }}
+          path: output/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: خلاصه
+        if: always()
+        run: bash scripts/summary.sh

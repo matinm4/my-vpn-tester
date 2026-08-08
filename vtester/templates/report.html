@@ -1,0 +1,689 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>__TITLE__</title>
+<style>
+  :root {
+    --page:          #0d0d0d;
+    --surface:       #1a1a19;
+    --surface-2:     #211f1f;
+    --text-primary:  #ffffff;
+    --text-secondary:#c3c2b7;
+    --muted:         #898781;
+    --gridline:      #2c2c2a;
+    --baseline:      #383835;
+    --border:        rgba(255,255,255,0.10);
+    --series-1:      #3987e5;
+    --series-1-soft: rgba(57,135,229,0.16);
+    --good:          #0ca30c;
+    --warning:       #fab219;
+    --serious:       #ec835a;
+    --critical:      #d03b3b;
+    --neutral-mark:  #4a4a46;
+    color-scheme: dark;
+  }
+  :root[data-theme="light"] {
+    --page:          #f9f9f7;
+    --surface:       #fcfcfb;
+    --surface-2:     #f2f1ed;
+    --text-primary:  #0b0b0b;
+    --text-secondary:#52514e;
+    --muted:         #898781;
+    --gridline:      #e1e0d9;
+    --baseline:      #c3c2b7;
+    --border:        rgba(11,11,11,0.10);
+    --series-1:      #2a78d6;
+    --series-1-soft: rgba(42,120,214,0.14);
+    --neutral-mark:  #c9c7bf;
+    color-scheme: light;
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--page);
+    color: var(--text-primary);
+    font-family: system-ui, -apple-system, "Segoe UI", Tahoma, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+    padding: 24px 20px 64px;
+  }
+  .wrap { max-width: 1500px; margin: 0 auto; }
+
+  /* ---------- سربرگ ---------- */
+  header.top {
+    display: flex; align-items: flex-start; justify-content: space-between;
+    gap: 16px; flex-wrap: wrap; margin-bottom: 22px;
+  }
+  h1 { font-size: 22px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.01em; }
+  .sub { color: var(--text-secondary); font-size: 13px; margin: 0; }
+  .sub code { color: var(--muted); font-size: 12px; }
+
+  button, select, input {
+    font: inherit; color: inherit;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 8px; padding: 7px 11px; outline: none;
+  }
+  button { cursor: pointer; }
+  button:hover, select:hover, input:hover { border-color: var(--muted); }
+  button:focus-visible, select:focus-visible, input:focus-visible {
+    border-color: var(--series-1); box-shadow: 0 0 0 3px var(--series-1-soft);
+  }
+  .btn-row { display: flex; gap: 8px; flex-wrap: wrap; }
+
+  /* ---------- فیلترها ---------- */
+  .filters {
+    display: flex; gap: 10px; flex-wrap: wrap; align-items: center;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 12px 14px; margin-bottom: 20px;
+  }
+  .filters label { color: var(--text-secondary); font-size: 12px; margin-inline-end: 4px; }
+  .filters .grow { flex: 1 1 220px; min-width: 180px; }
+  .filters .spacer { flex: 1 1 auto; }
+  .chip {
+    color: var(--text-secondary); font-size: 12px;
+    background: var(--surface-2); border-radius: 999px; padding: 4px 11px;
+    white-space: nowrap;
+  }
+
+  /* ---------- کارت‌های آمار ---------- */
+  .kpis {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(168px, 1fr));
+    gap: 12px; margin-bottom: 20px;
+  }
+  .tile {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 14px 16px;
+  }
+  .tile .label { color: var(--text-secondary); font-size: 12px; margin-bottom: 6px; }
+  .tile .value { font-size: 27px; font-weight: 600; letter-spacing: -0.02em; line-height: 1.15; }
+  .tile .value .unit { font-size: 14px; font-weight: 400; color: var(--muted); margin-inline-start: 3px; }
+  .tile .note { color: var(--muted); font-size: 12px; margin-top: 3px; }
+
+  /* ---------- نمودارها ---------- */
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 12px; margin-bottom: 20px; }
+  .card {
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 12px; padding: 16px 18px 12px;
+  }
+  .card h2 { font-size: 14px; font-weight: 600; margin: 0 0 2px; }
+  .card .hint { color: var(--muted); font-size: 12px; margin: 0 0 12px; }
+  .card svg { display: block; width: 100%; overflow: visible; }
+  .legend { display: flex; gap: 14px; flex-wrap: wrap; margin-top: 10px; }
+  .legend span { display: inline-flex; align-items: center; gap: 6px; color: var(--text-secondary); font-size: 12px; }
+  .legend i { width: 10px; height: 10px; border-radius: 3px; display: inline-block; }
+  .empty { color: var(--muted); font-size: 13px; padding: 28px 0; text-align: center; }
+
+  text.axis { fill: var(--muted); font-size: 11px; font-variant-numeric: tabular-nums;
+              direction: ltr; unicode-bidi: isolate; }
+  text.axis.cat { font-variant-numeric: normal; direction: rtl; }
+  text.datalabel { fill: var(--text-secondary); font-size: 11px; font-variant-numeric: tabular-nums; }
+  line.grid { stroke: var(--gridline); stroke-width: 1; }
+  line.base { stroke: var(--baseline); stroke-width: 1; }
+  .hit { fill: transparent; cursor: default; }
+
+  /* ---------- جدول ---------- */
+  .table-card { background: var(--surface); border: 1px solid var(--border); border-radius: 12px; padding: 4px 0 0; }
+  .table-head {
+    display: flex; align-items: center; justify-content: space-between;
+    gap: 12px; flex-wrap: wrap; padding: 14px 18px 10px;
+  }
+  .table-head h2 { font-size: 14px; font-weight: 600; margin: 0; }
+  .scroll { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead th {
+    position: sticky; top: 0; z-index: 2;
+    background: var(--surface-2); color: var(--text-secondary);
+    font-weight: 500; font-size: 12px; text-align: right;
+    padding: 9px 12px; white-space: nowrap;
+    border-bottom: 1px solid var(--border); cursor: pointer; user-select: none;
+  }
+  thead th:hover { color: var(--text-primary); }
+  thead th .arrow { color: var(--series-1); margin-inline-start: 3px; }
+  tbody td { padding: 8px 12px; border-bottom: 1px solid var(--gridline); white-space: nowrap; }
+  tbody tr:hover { background: var(--surface-2); }
+  td.num { font-variant-numeric: tabular-nums; text-align: left; direction: ltr; }
+  td.ltr { direction: ltr; text-align: right; font-family: ui-monospace, "Cascadia Mono", Consolas, monospace; font-size: 12px; }
+  td.name { max-width: 260px; overflow: hidden; text-overflow: ellipsis; }
+  td.err  { max-width: 240px; overflow: hidden; text-overflow: ellipsis; color: var(--text-secondary); }
+  .badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; white-space: nowrap; }
+  .badge .dot { width: 8px; height: 8px; border-radius: 50%; flex: none; }
+  .copy { background: transparent; border: 1px solid var(--border); border-radius: 6px; padding: 2px 9px; font-size: 12px; color: var(--text-secondary); }
+  .copy:hover { color: var(--text-primary); }
+  .foot { padding: 12px 18px; color: var(--muted); font-size: 12px; }
+
+  /* ---------- تولتیپ ---------- */
+  #tip {
+    position: fixed; z-index: 50; pointer-events: none; opacity: 0;
+    transition: opacity .12s; background: var(--surface-2);
+    border: 1px solid var(--border); border-radius: 8px;
+    padding: 8px 11px; font-size: 12px; line-height: 1.7;
+    box-shadow: 0 8px 24px rgba(0,0,0,.35); max-width: 280px;
+  }
+  #tip b { font-weight: 600; }
+  #tip .t-num { font-variant-numeric: tabular-nums; }
+
+  #toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(12px);
+    background: var(--surface-2); border: 1px solid var(--border); border-radius: 8px;
+    padding: 9px 16px; font-size: 13px; opacity: 0; transition: all .18s; z-index: 60;
+  }
+  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+  details.raw { margin-top: 16px; }
+  details.raw summary { cursor: pointer; color: var(--text-secondary); font-size: 13px; padding: 6px 0; }
+  details.raw pre {
+    background: var(--surface); border: 1px solid var(--border); border-radius: 10px;
+    padding: 14px; overflow: auto; max-height: 340px; direction: ltr; text-align: left;
+    font-size: 12px; color: var(--text-secondary);
+  }
+  @media print { body { padding: 0; } .filters, .btn-row, .copy { display: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <header class="top">
+    <div>
+      <h1 id="title"></h1>
+      <p class="sub" id="meta"></p>
+    </div>
+    <div class="btn-row">
+      <button id="copyWorking">کپی کانفیگ‌های سالم</button>
+      <button id="copySub">کپی سابسکریپشن base64</button>
+      <button id="themeBtn">حالت روشن</button>
+    </div>
+  </header>
+
+  <section class="filters">
+    <input class="grow" id="q" type="search" placeholder="جستجو در نام، سرور، IP، ISP…" autocomplete="off">
+    <span><label for="fStatus">وضعیت</label><select id="fStatus">
+      <option value="all">همه</option><option value="ok">فقط سالم</option><option value="bad">فقط ناموفق</option>
+    </select></span>
+    <span><label for="fProto">پروتکل</label><select id="fProto"><option value="all">همه</option></select></span>
+    <span><label for="fCountry">کشور</label><select id="fCountry"><option value="all">همه</option></select></span>
+    <span><label for="fMax">حداکثر پینگ</label><input id="fMax" type="number" min="0" step="50" placeholder="ms" style="width:96px"></span>
+    <button id="reset">پاک کردن فیلترها</button>
+    <span class="spacer"></span>
+    <span class="chip" id="filterCount"></span>
+  </section>
+
+  <section class="kpis" id="kpis"></section>
+
+  <section class="charts">
+    <div class="card">
+      <h2>توزیع پینگ کانفیگ‌های سالم</h2>
+      <p class="hint">کمینه‌ی نمونه‌های گرم، بر حسب میلی‌ثانیه</p>
+      <div id="chartLatency"></div>
+    </div>
+    <div class="card">
+      <h2>نتیجه به تفکیک پروتکل</h2>
+      <p class="hint">تعداد کانفیگ در هر پروتکل</p>
+      <div id="chartProto"></div>
+      <div class="legend">
+        <span><i style="background:var(--good)"></i>✓ سالم</span>
+        <span><i style="background:var(--neutral-mark)"></i>✕ ناموفق</span>
+      </div>
+    </div>
+    <div class="card">
+      <h2>کشور خروجی</h2>
+      <p class="hint" id="countryHint">بر اساس IP واقعی خروجی از تونل</p>
+      <div id="chartCountry"></div>
+    </div>
+  </section>
+
+  <section class="table-card">
+    <div class="table-head">
+      <h2>همه‌ی نتایج</h2>
+      <span class="chip" id="tableCount"></span>
+    </div>
+    <div class="scroll">
+      <table>
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="foot" id="tableFoot"></div>
+  </section>
+
+  <details class="raw">
+    <summary>منابع، تنظیمات و کانفیگ‌های ناسازگار</summary>
+    <pre id="rawInfo"></pre>
+  </details>
+</div>
+
+<div id="tip"></div>
+<div id="toast"></div>
+
+<script>
+const PAYLOAD = "__PAYLOAD__";
+
+/* ===================== ابزارها ===================== */
+const $  = (s) => document.querySelector(s);
+const el = (t, a = {}, kids = []) => {
+  const n = document.createElement(t);
+  for (const [k, v] of Object.entries(a)) {
+    if (k === 'class') n.className = v; else if (k === 'html') n.innerHTML = v; else n.setAttribute(k, v);
+  }
+  for (const c of [].concat(kids)) n.append(c);
+  return n;
+};
+const SVGNS = 'http://www.w3.org/2000/svg';
+const svgEl = (t, a = {}) => {
+  const n = document.createElementNS(SVGNS, t);
+  for (const [k, v] of Object.entries(a)) n.setAttribute(k, v);
+  return n;
+};
+const esc = (s) => String(s ?? '').replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+const fmt = (n, d = 0) => (n === null || n === undefined || Number.isNaN(n)) ? '—' :
+  Number(n).toLocaleString('en-US', { minimumFractionDigits: d, maximumFractionDigits: d });
+
+/* ستون بار با انتهای گرد و پایه‌ی صاف (۴ پیکسل شعاع) */
+function barUp(x, y, w, h, r = 4) {
+  r = Math.max(0, Math.min(r, w / 2, h));
+  const b = y + h;
+  return `M${x},${b} L${x},${y + r} Q${x},${y} ${x + r},${y} L${x + w - r},${y} Q${x + w},${y} ${x + w},${y + r} L${x + w},${b} Z`;
+}
+/* میله‌ی افقی RTL: از راست شروع می‌شود و انتهای چپش گرد است */
+function barLeft(xRight, y, w, h, r = 4, round = true) {
+  r = round ? Math.max(0, Math.min(r, w, h / 2)) : 0;
+  const l = xRight - w;
+  return `M${xRight},${y} L${l + r},${y} Q${l},${y} ${l},${y + r} L${l},${y + h - r} Q${l},${y + h} ${l + r},${y + h} L${xRight},${y + h} Z`;
+}
+function niceTicks(max, count = 4, integerOnly = false) {
+  if (max <= 0) return [0];
+  const raw = max / count;
+  const mag = Math.pow(10, Math.floor(Math.log10(raw)));
+  const steps = integerOnly ? [1, 2, 5, 10] : [1, 2, 2.5, 5, 10];
+  let step = steps.map((m) => m * mag).find((s) => s >= raw) || mag * 10;
+  if (integerOnly) step = Math.max(1, Math.round(step));
+  const out = [];
+  for (let v = 0; v <= max + step * 0.001; v += step) out.push(Math.round(v * 1000) / 1000);
+  return out;
+}
+
+/* ===================== تولتیپ ===================== */
+const tip = $('#tip');
+function showTip(evt, html) {
+  tip.innerHTML = html; tip.style.opacity = '1';
+  const pad = 14, r = tip.getBoundingClientRect();
+  let x = evt.clientX + pad, y = evt.clientY + pad;
+  if (x + r.width > innerWidth - 8) x = evt.clientX - r.width - pad;
+  if (y + r.height > innerHeight - 8) y = evt.clientY - r.height - pad;
+  tip.style.left = Math.max(8, x) + 'px'; tip.style.top = Math.max(8, y) + 'px';
+}
+const hideTip = () => { tip.style.opacity = '0'; };
+function bindTip(node, html) {
+  node.addEventListener('mousemove', (e) => showTip(e, html));
+  node.addEventListener('mouseleave', hideTip);
+}
+
+function toast(msg) {
+  const t = $('#toast'); t.textContent = msg; t.classList.add('show');
+  clearTimeout(t._h); t._h = setTimeout(() => t.classList.remove('show'), 1700);
+}
+async function copyText(text, okMsg) {
+  try { await navigator.clipboard.writeText(text); toast(okMsg); }
+  catch { toast('کپی ناموفق بود — مرورگر اجازه نداد'); }
+}
+
+/* ===================== وضعیت ===================== */
+const ALL = PAYLOAD.results || [];
+const S = PAYLOAD.summary || {};
+let sortKey = 'i', sortDir = 1, view = ALL.slice();
+
+const QUALITY = {
+  excellent: { color: 'var(--good)',     label: 'عالی'   },
+  good:      { color: 'var(--warning)',  label: 'خوب'    },
+  fair:      { color: 'var(--serious)',  label: 'متوسط'  },
+  poor:      { color: 'var(--critical)', label: 'ضعیف'   },
+  dead:      { color: 'var(--neutral-mark)', label: 'ناموفق' },
+};
+
+/* ===================== سربرگ ===================== */
+$('#title').textContent = PAYLOAD.title || 'گزارش تست کانفیگ‌های Xray';
+$('#meta').innerHTML =
+  `ساخته‌شده در ${esc(PAYLOAD.generated_at_human)} · مدت اجرا ${fmt(PAYLOAD.duration_s, 1)} ثانیه` +
+  (PAYLOAD.xray_version ? ` · <code>${esc(PAYLOAD.xray_version)}</code>` : '');
+
+/* ===================== کارت‌های آمار ===================== */
+function renderKpis() {
+  const tiles = [
+    { label: 'کانفیگ یکتا تست‌شده', value: fmt(S.tested_total), note: `${fmt(S.duplicates || 0)} تکراری حذف شد` },
+    { label: 'سالم', value: fmt(S.working), note: `${fmt(S.success_rate, 1)}٪ از کل` },
+    { label: 'بهترین پینگ', value: S.best_ms === null ? '—' : fmt(S.best_ms), unit: 'ms', note: 'کمینه‌ی کل' },
+    { label: 'میانه‌ی پینگ', value: S.median_ms === null ? '—' : fmt(S.median_ms), unit: 'ms', note: `میانگین ${S.avg_ms === null ? '—' : fmt(S.avg_ms)} ms` },
+    { label: 'کشور خروجی', value: fmt(S.countries_count), note: 'کشور یکتا' },
+    { label: 'از کش خوانده شد', value: fmt(S.from_cache || 0), note: `${fmt(S.tested_now || 0)} تست تازه` },
+  ];
+  $('#kpis').replaceChildren(...tiles.map((t) => el('div', { class: 'tile' }, [
+    el('div', { class: 'label' }, t.label),
+    el('div', { class: 'value', html: esc(t.value) + (t.unit ? `<span class="unit">${t.unit}</span>` : '') }),
+    el('div', { class: 'note' }, t.note || ''),
+  ])));
+}
+
+/* ===================== نمودار ۱: توزیع پینگ ===================== */
+const BINS = [
+  [0, 100], [100, 200], [200, 300], [300, 500], [500, 750],
+  [750, 1000], [1000, 1500], [1500, 2000], [2000, Infinity],
+];
+function renderLatency(rows) {
+  const host = $('#chartLatency');
+  const data = rows.filter((r) => r.ok && r.latency_ms !== null);
+  if (!data.length) { host.replaceChildren(el('div', { class: 'empty' }, 'کانفیگ سالمی برای نمایش نیست')); return; }
+
+  const counts = BINS.map(([lo, hi]) => data.filter((r) => r.latency_ms >= lo && r.latency_ms < hi).length);
+  const labels = BINS.map(([lo, hi]) => (hi === Infinity ? `${lo}+` : `${lo}–${hi}`));
+
+  const W = host.clientWidth || 420, H = 210;
+  const m = { top: 10, right: 8, bottom: 34, left: 34 };
+  const pw = W - m.left - m.right, ph = H - m.top - m.bottom;
+  const max = Math.max(...counts, 1), ticks = niceTicks(max, 4, true);
+  const top = ticks[ticks.length - 1];
+  const yOf = (v) => m.top + ph - (v / top) * ph;
+
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img' });
+  for (const t of ticks) {
+    svg.append(svgEl('line', { class: t === 0 ? 'base' : 'grid', x1: m.left, x2: W - m.right, y1: yOf(t), y2: yOf(t) }));
+    const lbl = svgEl('text', { class: 'axis', x: W - m.right, y: yOf(t) - 4, 'text-anchor': 'end' });
+    lbl.textContent = fmt(t); svg.append(lbl);
+  }
+
+  const slot = pw / BINS.length, bw = Math.min(24, slot - 2);
+  counts.forEach((c, i) => {
+    // RTL: کم‌ترین بازه سمت راست
+    const cx = m.left + pw - (i + 0.5) * slot;
+    const x = cx - bw / 2, h = (c / top) * ph, y = m.top + ph - h;
+    if (c > 0) svg.append(svgEl('path', { d: barUp(x, y, bw, h), fill: 'var(--series-1)' }));
+    const hit = svgEl('rect', { class: 'hit', x: cx - slot / 2, y: m.top, width: slot, height: ph });
+    bindTip(hit, `<b>${labels[i]} ms</b><br><span class="t-num">${fmt(c)}</span> کانفیگ`);
+    svg.append(hit);
+    if (i % 2 === 0 || BINS.length <= 6) {
+      const t = svgEl('text', { class: 'axis', x: cx, y: H - 14, 'text-anchor': 'middle' });
+      t.textContent = labels[i]; svg.append(t);
+    }
+  });
+  const cap = svgEl('text', { class: 'axis cat', x: m.left + pw, y: H - 1, 'text-anchor': 'end' });
+  cap.textContent = 'میلی‌ثانیه'; svg.append(cap);
+  host.replaceChildren(svg);
+}
+
+/* ===================== نمودار ۲: پروتکل ===================== */
+function renderProto(rows) {
+  const host = $('#chartProto');
+  const map = new Map();
+  for (const r of rows) {
+    const k = r.protocol || '?';
+    const b = map.get(k) || { total: 0, ok: 0 };
+    b.total++; if (r.ok) b.ok++;
+    map.set(k, b);
+  }
+  const items = [...map.entries()].map(([k, v]) => ({ k, ...v })).sort((a, b) => b.total - a.total);
+  if (!items.length) { host.replaceChildren(el('div', { class: 'empty' }, 'داده‌ای نیست')); return; }
+
+  const W = host.clientWidth || 420;
+  const rowH = 30, m = { top: 6, right: 92, bottom: 6, left: 8 };
+  const H = m.top + items.length * rowH + m.bottom;
+  const pw = W - m.left - m.right;
+  const max = Math.max(...items.map((i) => i.total), 1);
+  const GAP = 2, bh = Math.min(24, rowH - 8);
+
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img' });
+  items.forEach((it, i) => {
+    const y = m.top + i * rowH + (rowH - bh) / 2;
+    const xRight = W - m.right;               // RTL: میله‌ها از راست شروع می‌شوند
+    const full = (it.total / max) * pw;
+    const okW = it.total ? (it.ok / it.total) * full : 0;
+    const badW = Math.max(0, full - okW - (okW > 0 && okW < full ? GAP : 0));
+
+    if (okW > 0) svg.append(svgEl('path', { d: barLeft(xRight, y, okW, bh, 4, badW <= 0), fill: 'var(--good)' }));
+    if (badW > 0) {
+      const start = xRight - okW - (okW > 0 ? GAP : 0);
+      svg.append(svgEl('path', { d: barLeft(start, y, badW, bh, 4, true), fill: 'var(--neutral-mark)' }));
+    }
+    const name = svgEl('text', { class: 'axis cat', x: W - 4, y: y + bh / 2 + 4, 'text-anchor': 'end' });
+    name.textContent = it.k; svg.append(name);
+    const val = svgEl('text', { class: 'datalabel', x: xRight - full - 6, y: y + bh / 2 + 4, 'text-anchor': 'end' });
+    val.textContent = `${it.ok}/${it.total}`; svg.append(val);
+
+    const hit = svgEl('rect', { class: 'hit', x: m.left, y: m.top + i * rowH, width: W - m.left, height: rowH });
+    const pct = it.total ? (100 * it.ok / it.total).toFixed(1) : '0.0';
+    bindTip(hit, `<b>${esc(it.k)}</b><br>✓ سالم: <span class="t-num">${it.ok}</span><br>✕ ناموفق: <span class="t-num">${it.total - it.ok}</span><br>نرخ موفقیت: <span class="t-num">${pct}٪</span>`);
+    svg.append(hit);
+  });
+  host.replaceChildren(svg);
+}
+
+/* ===================== نمودار ۳: کشور ===================== */
+const TOP_N = 10;
+function renderCountry(rows) {
+  const host = $('#chartCountry');
+  const map = new Map();
+  for (const r of rows.filter((x) => x.ok)) {
+    const code = r.country_code || '??';
+    const b = map.get(code) || { code, label: r.country || 'نامشخص', flag: r.flag || '', count: 0, lats: [] };
+    b.count++; if (r.latency_ms !== null) b.lats.push(r.latency_ms);
+    map.set(code, b);
+  }
+  const all = [...map.values()].sort((a, b) => b.count - a.count);
+  const items = all.slice(0, TOP_N);
+  $('#countryHint').textContent = all.length > TOP_N
+    ? `بر اساس IP واقعی خروجی — ${TOP_N} کشور برتر از ${all.length} کشور`
+    : 'بر اساس IP واقعی خروجی از تونل';
+  if (!items.length) { host.replaceChildren(el('div', { class: 'empty' }, 'کانفیگ سالمی برای نمایش نیست')); return; }
+
+  const W = host.clientWidth || 420;
+  const rowH = 28, m = { top: 6, right: 116, bottom: 6, left: 8 };
+  const H = m.top + items.length * rowH + m.bottom;
+  const pw = W - m.left - m.right;
+  const max = Math.max(...items.map((i) => i.count), 1);
+  const bh = Math.min(20, rowH - 8);
+
+  const svg = svgEl('svg', { viewBox: `0 0 ${W} ${H}`, height: H, role: 'img' });
+  items.forEach((it, i) => {
+    const y = m.top + i * rowH + (rowH - bh) / 2;
+    const xRight = W - m.right, w = (it.count / max) * pw;
+    svg.append(svgEl('path', { d: barLeft(xRight, y, w, bh), fill: 'var(--series-1)' }));
+
+    const name = svgEl('text', { class: 'axis cat', x: W - 4, y: y + bh / 2 + 4, 'text-anchor': 'end' });
+    name.textContent = `${it.flag} ${it.label}`.trim(); svg.append(name);
+    const val = svgEl('text', { class: 'datalabel', x: xRight - w - 6, y: y + bh / 2 + 4, 'text-anchor': 'end' });
+    val.textContent = fmt(it.count); svg.append(val);
+
+    const hit = svgEl('rect', { class: 'hit', x: m.left, y: m.top + i * rowH, width: W - m.left, height: rowH });
+    const best = it.lats.length ? Math.min(...it.lats) : null;
+    const med = it.lats.length ? [...it.lats].sort((a, b) => a - b)[Math.floor(it.lats.length / 2)] : null;
+    bindTip(hit, `<b>${esc(it.label)}</b><br>کانفیگ سالم: <span class="t-num">${it.count}</span>` +
+      (best !== null ? `<br>بهترین: <span class="t-num">${fmt(best)}</span> ms<br>میانه: <span class="t-num">${fmt(med)}</span> ms` : ''));
+    svg.append(hit);
+  });
+  host.replaceChildren(svg);
+}
+
+/* ===================== جدول ===================== */
+const COLS = [
+  { key: 'i',            title: '#',        cls: 'num'  },
+  { key: 'ok',           title: 'وضعیت'                 },
+  { key: 'name',         title: 'نام',      cls: 'name' },
+  { key: 'protocol',     title: 'پروتکل'                },
+  { key: 'transport',    title: 'ترنسپورت'              },
+  { key: 'endpoint',     title: 'سرور',     cls: 'ltr'  },
+  { key: 'latency_ms',   title: 'پینگ',     cls: 'num'  },
+  { key: 'handshake_ms', title: 'هندشیک',   cls: 'num'  },
+  { key: 'jitter_ms',    title: 'جیتر',     cls: 'num'  },
+  { key: 'exit_ip',      title: 'IP خروجی', cls: 'ltr'  },
+  { key: 'country',      title: 'کشور'                  },
+  { key: 'isp',          title: 'ISP',      cls: 'name' },
+  { key: 'error',        title: 'خطا',      cls: 'err'  },
+  { key: '_copy',        title: 'لینک'                  },
+];
+
+function renderHead() {
+  $('#thead').replaceChildren(...COLS.map((c) => {
+    const th = el('th', {}, c.title + (sortKey === c.key ? ' ' : ''));
+    if (sortKey === c.key) th.append(el('span', { class: 'arrow' }, sortDir > 0 ? '▲' : '▼'));
+    if (c.key !== '_copy') th.addEventListener('click', () => {
+      if (sortKey === c.key) sortDir *= -1; else { sortKey = c.key; sortDir = 1; }
+      renderHead(); renderBody();
+    });
+    else th.style.cursor = 'default';
+    return th;
+  }));
+}
+
+function sortRows(rows) {
+  const dead = (r) => (r.latency_ms === null || r.latency_ms === undefined);
+  return rows.slice().sort((a, b) => {
+    // کانفیگ‌های ناموفق در مرتب‌سازی عددی همیشه ته لیست می‌مانند
+    if (['latency_ms', 'handshake_ms', 'jitter_ms'].includes(sortKey)) {
+      if (dead(a) !== dead(b)) return dead(a) ? 1 : -1;
+    }
+    let x = a[sortKey], y = b[sortKey];
+    if (typeof x === 'boolean') { x = x ? 1 : 0; y = y ? 1 : 0; }
+    if (x === null || x === undefined) x = sortDir > 0 ? Infinity : -Infinity;
+    if (y === null || y === undefined) y = sortDir > 0 ? Infinity : -Infinity;
+    if (typeof x === 'number' && typeof y === 'number') return (x - y) * sortDir;
+    return String(x).localeCompare(String(y), 'fa') * sortDir;
+  });
+}
+
+function renderBody() {
+  const rows = sortRows(view);
+  const frag = document.createDocumentFragment();
+  for (const r of rows) {
+    const q = QUALITY[r.quality] || QUALITY.dead;
+    const tr = el('tr');
+    for (const c of COLS) {
+      const td = el('td', c.cls ? { class: c.cls } : {});
+      if (c.key === 'ok') {
+        td.append(el('span', { class: 'badge' }, [
+          el('span', { class: 'dot', style: `background:${q.color}` }),
+          r.ok ? `✓ ${q.label}` : '✕ ناموفق',
+        ]));
+      } else if (c.key === '_copy') {
+        const b = el('button', { class: 'copy' }, 'کپی');
+        b.addEventListener('click', () => copyText(r.link, 'لینک کانفیگ کپی شد'));
+        td.append(b);
+      } else if (c.key === 'country') {
+        td.textContent = r.ok ? `${r.flag || ''} ${r.country || '—'}`.trim() : '—';
+      } else if (['latency_ms', 'handshake_ms', 'jitter_ms'].includes(c.key)) {
+        td.textContent = r[c.key] === null || r[c.key] === undefined ? '—' : fmt(r[c.key], 0);
+      } else if (c.key === 'name') {
+        td.textContent = r.name; td.title = r.name;
+      } else if (c.key === 'error') {
+        td.textContent = r.error || ''; td.title = r.error || '';
+      } else {
+        td.textContent = r[c.key] === null || r[c.key] === undefined || r[c.key] === '' ? '—' : r[c.key];
+      }
+      tr.append(td);
+    }
+    if (r.ok) {
+      tr.addEventListener('mousemove', (e) => showTip(e,
+        `<b>${esc(r.name)}</b><br>نمونه‌ها: <span class="t-num">${(r.samples || []).map((s) => fmt(s)).join(' / ') || '—'}</span> ms` +
+        `<br>موفق: <span class="t-num">${r.attempts_ok}/${r.attempts_total}</span> · دور: ${r.rounds}` +
+        (r.city ? `<br>${esc(r.city)}` : '') + (r.asn ? `<br>${esc(r.asn)}` : '') +
+        (r.from_cache ? '<br><i>از کش</i>' : '')));
+      tr.addEventListener('mouseleave', hideTip);
+    }
+    frag.append(tr);
+  }
+  $('#tbody').replaceChildren(frag);
+  $('#tableCount').textContent = `${fmt(rows.length)} ردیف`;
+  $('#tableFoot').textContent = rows.length === ALL.length
+    ? `نمایش همه‌ی ${fmt(ALL.length)} کانفیگ`
+    : `نمایش ${fmt(rows.length)} از ${fmt(ALL.length)} کانفیگ`;
+}
+
+/* ===================== فیلترها ===================== */
+function populateFilters() {
+  const protos = [...new Set(ALL.map((r) => r.protocol).filter(Boolean))].sort();
+  for (const p of protos) $('#fProto').append(el('option', { value: p }, p));
+  const seen = new Map();
+  for (const r of ALL) if (r.ok && r.country_code) seen.set(r.country_code, `${r.flag || ''} ${r.country}`.trim());
+  for (const [code, label] of [...seen].sort((a, b) => a[1].localeCompare(b[1], 'fa'))) {
+    $('#fCountry').append(el('option', { value: code }, label));
+  }
+}
+
+function applyFilters() {
+  const q = $('#q').value.trim().toLowerCase();
+  const status = $('#fStatus').value, proto = $('#fProto').value, country = $('#fCountry').value;
+  const maxMs = parseFloat($('#fMax').value);
+
+  view = ALL.filter((r) => {
+    if (status === 'ok' && !r.ok) return false;
+    if (status === 'bad' && r.ok) return false;
+    if (proto !== 'all' && r.protocol !== proto) return false;
+    if (country !== 'all' && r.country_code !== country) return false;
+    if (!Number.isNaN(maxMs) && maxMs > 0 && (!r.ok || r.latency_ms === null || r.latency_ms > maxMs)) return false;
+    if (q) {
+      const hay = [r.name, r.address, r.endpoint, r.exit_ip, r.isp, r.country, r.protocol, r.transport, r.sni, r.source]
+        .join(' ').toLowerCase();
+      if (!hay.includes(q)) return false;
+    }
+    return true;
+  });
+
+  const okCount = view.filter((r) => r.ok).length;
+  $('#filterCount').textContent = `${fmt(view.length)} کانفیگ · ${fmt(okCount)} سالم`;
+  // همه‌ی نمودارها روی همان برش فیلترشده رندر می‌شوند
+  renderLatency(view); renderProto(view); renderCountry(view); renderBody();
+}
+
+/* ===================== راه‌اندازی ===================== */
+function workingLinks() {
+  return ALL.filter((r) => r.ok && r.link)
+    .sort((a, b) => (a.latency_ms ?? Infinity) - (b.latency_ms ?? Infinity))
+    .map((r) => r.link);
+}
+$('#copyWorking').addEventListener('click', () => {
+  const links = workingLinks();
+  links.length ? copyText(links.join('\n'), `${links.length} کانفیگ سالم کپی شد`) : toast('کانفیگ سالمی وجود ندارد');
+});
+$('#copySub').addEventListener('click', () => {
+  const links = workingLinks();
+  if (!links.length) { toast('کانفیگ سالمی وجود ندارد'); return; }
+  copyText(btoa(String.fromCharCode(...new TextEncoder().encode(links.join('\n')))), 'سابسکریپشن base64 کپی شد');
+});
+$('#themeBtn').addEventListener('click', () => {
+  const light = document.documentElement.getAttribute('data-theme') === 'light';
+  document.documentElement.setAttribute('data-theme', light ? 'dark' : 'light');
+  $('#themeBtn').textContent = light ? 'حالت روشن' : 'حالت تیره';
+  try { localStorage.setItem('vtester-theme', light ? 'dark' : 'light'); } catch {}
+  applyFilters();
+});
+try {
+  const saved = localStorage.getItem('vtester-theme');
+  if (saved === 'light') { document.documentElement.setAttribute('data-theme', 'light'); $('#themeBtn').textContent = 'حالت تیره'; }
+} catch {}
+
+for (const id of ['#q', '#fStatus', '#fProto', '#fCountry', '#fMax']) {
+  $(id).addEventListener('input', applyFilters);
+  $(id).addEventListener('change', applyFilters);
+}
+$('#reset').addEventListener('click', () => {
+  $('#q').value = ''; $('#fStatus').value = 'all'; $('#fProto').value = 'all';
+  $('#fCountry').value = 'all'; $('#fMax').value = '';
+  applyFilters();
+});
+
+$('#rawInfo').textContent = JSON.stringify({
+  sources: PAYLOAD.sources,
+  settings: PAYLOAD.settings,
+  parse_errors_total: PAYLOAD.parse_errors_total,
+  parse_errors: PAYLOAD.parse_errors,
+}, null, 2);
+
+renderKpis(); populateFilters(); renderHead(); applyFilters();
+
+let resizeTimer;
+addEventListener('resize', () => {
+  clearTimeout(resizeTimer);
+  resizeTimer = setTimeout(() => { renderLatency(view); renderProto(view); renderCountry(view); }, 140);
+});
+</script>
+</body>
+</html>

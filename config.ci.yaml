@@ -1,0 +1,152 @@
+# ============================================================================
+#  تنظیمات گیت‌هاب اکشن (لینوکس)
+#
+#  این فایل الگوست: ورک‌فلو با scripts/make-config.sh آن را به config.yaml
+#  تبدیل می‌کند و رمزهای تلگرام را از سکرت‌ها داخلش می‌گذارد. پس هیچ رمزی
+#  در مخزن نیست و کد پایتون هم هیچ تغییری برای CI لازم ندارد.
+#
+#  تفاوت‌های کلیدی با config.yaml ویندوزی:
+#    • xray.binary = "xray"  (بدون .exe)
+#    • vpn_gate خاموش — رانرهای گیت‌هاب اینترنت آزاد دارند، فیلترشکنی در کار نیست
+#    • telegram_in_service روشن — به همین دلیل بالا
+# ============================================================================
+
+input:
+  subs_file: "subs.txt"
+  config_files: []
+  user_agent: "v2rayN/6.45"
+  fetch_timeout: 30
+  fetch_retries: 2
+  fetch_proxy: ""
+
+
+xray:
+  binary: "xray"                 # نسخه‌ی لینوکس (بدون .exe)
+  assets_dir: "."
+  log_level: "none"
+  start_timeout: 10.0            # رانرها گاهی کندترند
+  port_start: 21000
+  port_end: 23000                # محدوده‌ی بازتر برای concurrency بالاتر
+  listen: "127.0.0.1"
+  allow_insecure: false
+  domain_strategy: "AsIs"
+  sniffing: false
+  mux_enabled: false
+  mux_concurrency: 8
+  extra_outbound: {}
+
+
+test:
+  # رانر گیت‌هاب ۴ هسته دارد. هر کانفیگ یک پروسه‌ی xray سبک است، پس گلوگاه
+  # شبکه است نه CPU. ۲۴ تعادل خوبی بین سرعت و دقت اعداد است.
+  concurrency: 24
+  attempts: 3
+  attempt_timeout: 8.0
+  latency_url: "http://cp.cloudflare.com/generate_204"
+  accept_status: [200, 204]
+  retries: 1
+  retry_delay: 1.0
+  ip_check: true
+  ip_check_url: "http://cp.cloudflare.com/cdn-cgi/trace"
+  ip_check_timeout: 10.0
+  geo_enrich: true
+  geo_batch_url: "http://ip-api.com/batch"
+  max_latency_ms: 0
+  limit: 0
+  shuffle: false
+  only_protocols: []
+
+
+dedup:
+  enabled: true
+  keep: "first"
+
+
+cache:
+  enabled: false                 # در CI فقط SQLite استفاده می‌شود
+  path: ".cache/results.jsonl"
+  ttl_hours: 12
+  retest_failed: false
+
+
+output:
+  dir: "output"
+  json_file: "results.json"
+  html_file: "report.html"
+  working_file: "working.txt"
+  subscription_file: "working_sub.txt"
+  sort_by: "latency"
+  include_failed: true
+  title: "گزارش تست کانفیگ‌های Xray"
+
+
+store:
+  path: ".cache/configs.db"
+  # در CI سخت‌گیرانه‌تر هرس می‌کنیم تا آرشیو رمزنگاری‌شده کوچک بماند
+  keep_results_per_config: 3
+  prune_after_days: 14
+
+
+health:
+  blacklist_after_failures: 3
+  blacklist_hours: 24
+
+
+telegram:
+  # این مقادیر را scripts/make-config.sh از سکرت‌های گیت‌هاب پر می‌کند.
+  # اگر سکرت‌ها تنظیم نشده باشند، همین‌طور خاموش می‌ماند و سرویس فقط از
+  # subs.txt کار می‌کند.
+  enabled: false
+
+  api_id: 0
+  api_hash: ""
+  session_string: ""
+
+  channels: []
+
+  days_back: 30
+  # مهلت‌ها کوتاه‌تر از نسخه‌ی محلی: کل جاب گیت‌هاب سقف ۶ ساعت دارد
+  per_channel_timeout: 300
+  total_timeout: 1500
+  max_messages_per_channel: 0
+  state_file: ".cache/telegram_state.json"
+  legacy_output: "recive_config_from_telegram/configs_output.json"
+
+
+vpn_gate:
+  # رانرهای گیت‌هاب در دیتاسنتر هستند و اینترنت آزاد دارند؛ فیلترشکنی روشن
+  # نیست که بخواهیم منتظر خاموش شدنش بمانیم. ضمناً stdin وجود ندارد.
+  enabled: false
+  wait_minutes: 15
+  probe_url: "http://cp.cloudflare.com/cdn-cgi/trace"
+  require_ip_change: true
+  reminder_seconds: 60
+  probe_every_seconds: 10
+
+
+pool:
+  size: 20
+  batch_size: 20
+  max_batches: 0
+  max_age_hours: 24
+  history_limit: 2000
+  history_file: "pool_history.json"
+  top_file: "top20.txt"
+  top_sub_file: "top20_sub.txt"
+  batch_dir: "batches"
+
+
+live:
+  # در CI این دو بی‌اثرند: هر اجرا یک دور تکی است و زمان‌بندی را cron
+  # گیت‌هاب اکشن مدیریت می‌کند.
+  discovery_interval_minutes: 360
+  pool_interval_minutes: 30
+
+  # سقف تست در هر دور. جاب گیت‌هاب سقف ۶ ساعت دارد؛ این اعداد دور کشف را
+  # حدود ۴۰ تا ۶۰ دقیقه نگه می‌دارند.
+  batch_test_size: 2500
+  max_untested_per_cycle: 2000
+
+  retest_after_hours: 12
+  log_failures: false
+  telegram_in_service: true      # روی رانر گیت‌هاب مشکلی ندارد

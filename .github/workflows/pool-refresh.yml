@@ -1,0 +1,65 @@
+name: بازبینی استخر
+
+# ۲۰ کانفیگ برتر را دوباره تست می‌کند و هرکدام که افتاده باشد با بهترین
+# جایگزین بعدی عوض می‌شود. سبک است — معمولاً زیر ۵ دقیقه.
+on:
+  schedule:
+    - cron: "*/30 * * * *"      # هر ۳۰ دقیقه
+  workflow_dispatch:             # اجرای دستی از تب Actions
+
+concurrency:
+  group: vtester-state
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  pool:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: نصب وابستگی‌ها
+        run: pip install -q -r requirements.txt
+
+      - name: نصب هسته‌ی Xray
+        uses: ./.github/actions/setup-xray
+
+      # بازبینی استخر به تلگرام کاری ندارد، پس سکرتی هم لازم نیست
+      - name: ساخت تنظیمات
+        run: bash scripts/make-config.sh
+
+      - name: بازیابی حافظه
+        env:
+          VT_STATE_PASSPHRASE: ${{ secrets.VT_STATE_PASSPHRASE }}
+        run: bash scripts/state.sh pull
+
+      - name: بازبینی استخر
+        run: python live.py --pool-only
+
+      - name: ذخیره‌ی حافظه
+        if: always()
+        env:
+          VT_STATE_PASSPHRASE: ${{ secrets.VT_STATE_PASSPHRASE }}
+        run: bash scripts/state.sh push
+
+      - name: بارگذاری خروجی‌ها
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pool-${{ github.run_number }}
+          path: output/
+          retention-days: 30
+          if-no-files-found: warn
+
+      - name: خلاصه
+        if: always()
+        run: bash scripts/summary.sh

@@ -1,0 +1,147 @@
+# ============================================================================
+#  نمونه‌ی تنظیمات — این فایل را به config.yaml کپی کنید و مقادیر خود را
+#  بگذارید. برای شرح کامل هر گزینه به USAGE.md مراجعه کنید.
+#
+#  ⚠ config.yaml را جایی به اشتراک نگذارید: حاوی session_string تلگرام است.
+# ============================================================================
+
+input:
+  subs_file: "subs.txt"          # هر خط یک لینک سابسکریپشن
+  config_files: []
+  user_agent: "v2rayN/6.45"
+  fetch_timeout: 30
+  fetch_retries: 2
+  fetch_proxy: ""                # اگر خود لینک ساب فیلتر است، مثلاً "socks5h://127.0.0.1:10808"
+
+
+xray:
+  binary: "xray.exe"
+  assets_dir: "."
+  log_level: "none"              # none | error | warning | info | debug
+  start_timeout: 8.0
+  port_start: 21000
+  port_end: 22000
+  listen: "127.0.0.1"
+  allow_insecure: false
+  domain_strategy: "AsIs"
+  sniffing: false
+  mux_enabled: false
+  mux_concurrency: 8
+  extra_outbound: {}
+
+
+test:
+  concurrency: 16                # چند کانفیگ همزمان تست شود
+  attempts: 3
+  attempt_timeout: 8.0
+  latency_url: "http://cp.cloudflare.com/generate_204"
+  accept_status: [200, 204]
+  retries: 1
+  retry_delay: 1.0
+  ip_check: true
+  ip_check_url: "http://cp.cloudflare.com/cdn-cgi/trace"
+  ip_check_timeout: 10.0
+  geo_enrich: true
+  geo_batch_url: "http://ip-api.com/batch"
+  max_latency_ms: 0
+  limit: 0
+  shuffle: false
+  only_protocols: []             # خالی = همه. مثال: [vless, trojan]
+
+
+dedup:
+  enabled: true
+  keep: "first"                  # first | shortest_name
+
+
+cache:
+  enabled: true
+  path: ".cache/results.jsonl"
+  ttl_hours: 12
+  retest_failed: false
+
+
+output:
+  dir: "output"
+  json_file: "results.json"
+  html_file: "report.html"
+  working_file: "working.txt"
+  subscription_file: "working_sub.txt"
+  sort_by: "latency"             # latency | name | protocol | country
+  include_failed: true
+  title: "گزارش تست کانفیگ‌های Xray"
+
+
+# ============================================================================
+#  از اینجا به بعد فقط برای سرویس دائمی (live.py) لازم است
+# ============================================================================
+
+store:
+  path: ".cache/configs.db"
+  keep_results_per_config: 5
+  prune_after_days: 30
+
+
+health:
+  blacklist_after_failures: 3    # بعد از چند شکست متوالی کنار گذاشته شود
+  blacklist_hours: 24            # چند ساعت کنار بماند
+
+
+telegram:
+  # روی false، سرویس فقط از لینک‌های ساب استفاده می‌کند.
+  enabled: false
+
+  # از my.telegram.org بگیرید
+  api_id: 0
+  api_hash: ""
+
+  # نشست تلگرام. برای ساختنش یک بار این را اجرا کنید:
+  #   python -c "from telethon.sync import TelegramClient; from telethon.sessions import StringSession; print(TelegramClient(StringSession(), API_ID, 'API_HASH').start().session.save())"
+  #
+  # ⚠ هرکس این رشته را داشته باشد به حساب تلگرام شما دسترسی کامل دارد.
+  session_string: ""
+
+  # کانال‌ها — با @ یا آیدی عددی. هر تعداد که بخواهید.
+  channels:
+    - "@example_channel"
+
+  days_back: 30
+  per_channel_timeout: 180
+  total_timeout: 900
+  max_messages_per_channel: 0
+  state_file: ".cache/telegram_state.json"
+  legacy_output: "recive_config_from_telegram/configs_output.json"
+
+
+vpn_gate:
+  # تست پینگ با فیلترشکن روشن بی‌معناست: ترافیک تست از تونل فیلترشکن رد
+  # می‌شود و همه‌ی کانفیگ‌ها الکی سالم به نظر می‌رسند. این دروازه بعد از
+  # مرحله‌ی دریافت (که به فیلترشکن نیاز دارد) می‌ایستد تا آن را خاموش کنید.
+  enabled: true
+  wait_minutes: 15
+  probe_url: "http://cp.cloudflare.com/cdn-cgi/trace"
+  require_ip_change: true        # false = صرف زدن Enter کافی است
+  reminder_seconds: 60
+  probe_every_seconds: 10
+
+
+pool:
+  size: 20                       # چند کانفیگ برتر در استخر باشد
+  batch_size: 20                 # چند کانفیگ در هر فایل دسته‌ای
+  max_batches: 0
+  max_age_hours: 24
+  history_limit: 2000
+  history_file: "pool_history.json"
+  top_file: "top20.txt"          # اگر size را عوض کردید این نام را هم عوض کنید
+  top_sub_file: "top20_sub.txt"
+  batch_dir: "batches"
+
+
+live:
+  discovery_interval_minutes: 60 # هر چند دقیقه یک دور کشف
+  pool_interval_minutes: 30      # هر چند دقیقه بازبینی استخر
+  batch_test_size: 0             # سقف تست در هر دور (۰ = بدون سقف)
+  max_untested_per_cycle: 5000   # سقف برداشت از انبار تست‌نشده‌ها
+  retest_after_hours: 12
+  log_failures: false
+  telegram_in_service: false     # true = تلگرام در دورهای بعدی هم خوانده شود

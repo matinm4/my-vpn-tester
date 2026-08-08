@@ -1,0 +1,17 @@
+# Outputs and state
+output/
+output_*/
+.cache/
+
+# Built at runtime from secrets - must never be committed
+config.yaml
+
+# Telegram session
+make_session.py
+*.session
+
+__pycache__/
+*.pyc
+*.pyo
+.test_live_tmp/
+*.tmp
