@@ -225,12 +225,12 @@ python live.py --help             # فهرست کامل
 ```yaml
 telegram:
   enabled: true
-  api_id: 22556457                 # از my.telegram.org
+  api_id: 12345678                 # از my.telegram.org
   api_hash: "..."
   session_string: "..."            # نشست ساخته‌شده (StringSession)
   channels:
-    - "@persianvpnhub"
-    - "@channel2"                  # هر تعداد کانال
+    - "@your_channel"
+    - "@another_channel"           # هر تعداد کانال
   days_back: 30                    # چند روز عقب خوانده شود
 ```
 
