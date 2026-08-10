@@ -160,8 +160,59 @@ def test_config_generation() -> None:
         tmp.unlink(missing_ok=True)
 
 
+def test_binary_lookup() -> None:
+    """هسته روی رانر گیت‌هاب در ~/.local/bin است، نه در ریشه‌ی مخزن.
+
+    قبلاً path_of نام خالی «xray» را به «<ریشه>/xray» تبدیل می‌کرد و
+    اعتبارسنجی با «هسته‌ی Xray پیدا نشد» می‌شکست. binary_of باید در PATH
+    هم بگردد، ولی مسیرهای صریح را دست‌نخورده بگذارد.
+    """
+    print("\n[۳] پیدا کردن هسته‌ی Xray")
+    import shutil
+    import tempfile
+
+    from vtester.settings import Settings
+
+    exe = "xray.bat" if os.name == "nt" else "xray"
+    with tempfile.TemporaryDirectory() as tmpdir:
+        bindir = Path(tmpdir) / "bin"
+        bindir.mkdir()
+        fake = bindir / exe
+        fake.write_text("@echo off\necho Xray 0.0.0\n" if os.name == "nt"
+                        else "#!/bin/sh\necho Xray 0.0.0\n", encoding="utf-8")
+        fake.chmod(0o755)
+
+        old_path = os.environ["PATH"]
+        os.environ["PATH"] = str(bindir) + os.pathsep + old_path
+        try:
+            s = Settings({"xray": {"binary": "xray"}}, ROOT)
+            found = s.binary_of("xray.binary")
+            check("نام خالی از PATH پیدا می‌شود", found.exists(), str(found))
+            check("همان فایل نصب‌شده است",
+                  found.parent.resolve() == bindir.resolve(), str(found))
+            check("shutil.which هم همان را می‌بیند", shutil.which("xray") is not None)
+
+            # مسیرهای صریح نباید به PATH سرریز کنند
+            for explicit in ("./xray", "bin/xray"):
+                s = Settings({"xray": {"binary": explicit}}, ROOT)
+                got = s.binary_of("xray.binary")
+                check(f"{explicit} نسبت به ریشه می‌ماند",
+                      ROOT in got.parents or got.parent == ROOT, str(got))
+
+            # مسیر مطلق باید دست‌نخورده بماند
+            s = Settings({"xray": {"binary": str(fake)}}, ROOT)
+            check("مسیر مطلق دست‌نخورده", s.binary_of("xray.binary") == fake)
+        finally:
+            os.environ["PATH"] = old_path
+
+        # بدون PATH و بدون فایل، خطا باید همان پیام روشن قبلی باشد
+        s = Settings({"xray": {"binary": "definitely-not-a-real-core"}}, ROOT)
+        missing = s.binary_of("xray.binary")
+        check("هسته‌ی نبود همچنان خطا می‌دهد", not missing.exists(), str(missing))
+
+
 def test_workflows() -> None:
-    print("\n[۳] ورک‌فلوها")
+    print("\n[۴] ورک‌فلوها")
     wf_dir = ROOT / ".github" / "workflows"
     check("پوشه‌ی ورک‌فلو موجود است", wf_dir.is_dir())
     if not wf_dir.is_dir():
@@ -209,7 +260,7 @@ def test_workflows() -> None:
 
 
 def test_shell_scripts() -> None:
-    print("\n[۴] اسکریپت‌های شل")
+    print("\n[۵] اسکریپت‌های شل")
     scripts = ROOT / "scripts"
     check("پوشه‌ی scripts موجود است", scripts.is_dir())
     if not scripts.is_dir():
@@ -234,7 +285,7 @@ def test_shell_scripts() -> None:
 
 
 def test_no_secrets() -> None:
-    print("\n[۵] نبود رمز در فایل‌های قابل کامیت")
+    print("\n[۶] نبود رمز در فایل‌های قابل کامیت")
     # الگوی session_string تلگرام: رشته‌ی بلند base64 که با 1B شروع می‌شود
     session_re = re.compile(r"1[A-Za-z]{2}\w{40,}")
     hash_re = re.compile(r"\b[0-9a-f]{32}\b")
@@ -274,6 +325,7 @@ def main() -> int:
 
     test_ci_config()
     test_config_generation()
+    test_binary_lookup()
     test_workflows()
     test_shell_scripts()
     test_no_secrets()

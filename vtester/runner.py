@@ -107,7 +107,7 @@ class XrayInstance:
         doc = build_full_config(self.cfg, self.port, self.settings)
         config_path.write_text(json.dumps(doc, ensure_ascii=False), encoding="utf-8")
 
-        binary = self.settings.path_of("xray.binary")
+        binary = self.settings.binary_of("xray.binary")
         env = os.environ.copy()
         env["XRAY_LOCATION_ASSET"] = str(self.settings.path_of("xray.assets_dir"))
 

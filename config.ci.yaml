@@ -21,7 +21,10 @@ input:
 
 
 xray:
-  binary: "xray"                 # نسخه‌ی لینوکس (بدون .exe)
+  binary: "xray"                 # نسخه‌ی لینوکس (بدون .exe) — از PATH پیدا می‌شود
+                                 # (اکشن setup-xray آن را در ~/.local/bin نصب می‌کند).
+                                 # نام خالی ⇒ اول ریشه‌ی مخزن، بعد PATH.
+                                 # مسیر صریح مثل "./xray" همیشه نسبت به ریشه است.
   assets_dir: "."
   log_level: "none"
   start_timeout: 10.0            # رانرها گاهی کندترند

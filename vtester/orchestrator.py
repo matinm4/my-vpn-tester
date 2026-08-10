@@ -275,7 +275,7 @@ class Orchestrator:
     def _xray_version(self) -> str:
         try:
             proc = subprocess.run(
-                [str(self.settings.path_of("xray.binary")), "version"],
+                [str(self.settings.binary_of("xray.binary")), "version"],
                 capture_output=True, text=True, timeout=10,
                 encoding="utf-8", errors="replace",
             )

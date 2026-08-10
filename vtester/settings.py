@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 import os
+import shutil
 from pathlib import Path
 from typing import Any, Dict, Optional
 
@@ -195,6 +196,34 @@ class Settings:
         p = Path(os.path.expandvars(os.path.expanduser(str(raw))))
         return p if p.is_absolute() else (self.root / p)
 
+    def binary_of(self, dotted: str, default: Any = None) -> Path:
+        """مثل path_of، ولی برای فایل اجرایی.
+
+        اگر مقدار فقط یک نام باشد (مثل «xray» بدون هیچ جداکننده‌ی مسیر) و
+        کنار پروژه پیدا نشود، در PATH دنبالش می‌گردیم. روی گیت‌هاب اکشن
+        هسته در ~/.local/bin نصب می‌شود و در ریشه‌ی مخزن نیست.
+        نامی که جداکننده دارد (مثل «./xray» یا «bin/xray») همیشه نسبت به
+        ریشه‌ی پروژه معنا می‌شود — دقیقاً مثل قبل.
+        """
+        raw = str(self.get(dotted, default))
+        expanded = os.path.expandvars(os.path.expanduser(raw))
+        p = Path(expanded)
+
+        if p.is_absolute():
+            return p
+
+        candidate = self.root / p
+        if candidate.exists():
+            return candidate
+
+        # فقط نام خالی — نه «./xray» و نه «bin/xray»
+        if Path(expanded).name == expanded:
+            found = shutil.which(expanded)
+            if found:
+                return Path(found)
+
+        return candidate
+
     def as_dict(self) -> Dict[str, Any]:
         return copy.deepcopy(self._data)
 
@@ -204,7 +233,7 @@ class Settings:
         """بررسی‌های زودهنگام تا خطاها قبل از شروع تست معلوم شوند."""
         errors = []
 
-        binary = self.path_of("xray.binary")
+        binary = self.binary_of("xray.binary")
         if not binary.exists():
             errors.append(f"هسته‌ی Xray پیدا نشد: {binary}")
 
