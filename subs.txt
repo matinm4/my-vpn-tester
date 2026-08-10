@@ -1,1 +1,1 @@
-https://raw.githubusercontent.com/SoliSpirit/v2ray-configs/refs/heads/main/all_configs.txt
+https://raw.githubusercontent.com/nftmetamat/test_config/refs/heads/main/a
