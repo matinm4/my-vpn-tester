@@ -85,6 +85,10 @@ def test_ci_config() -> None:
     check("محدوده‌ی پورت کافی",
           cfg["xray"]["port_end"] - cfg["xray"]["port_start"] >= cfg["test"]["concurrency"])
 
+    # خروجی عمومی منتشر می‌شود، پس نام کانفیگ‌ها باید بازنویسی شود
+    check("پاک‌سازی نام روشن است", cfg["output"]["clean_names"] is True,
+          str(cfg["output"].get("clean_names")))
+
     # هیچ رمزی نباید در فایلی که کامیت می‌شود باشد
     raw = path.read_text(encoding="utf-8")
     check("بدون session_string", not re.search(r"session_string:\s*['\"]?\w{20,}", raw))
@@ -242,6 +246,7 @@ def test_workflows() -> None:
         runs = " ".join(s.get("run", "") for s in steps)
 
         check(f"{name}: تنظیمات را می‌سازد", "make-config.sh" in runs)
+        check(f"{name}: خروجی را منتشر می‌کند", "publish.sh" in runs)
         check(f"{name}: حافظه را بازیابی می‌کند", "state.sh pull" in runs)
         check(f"{name}: حافظه را ذخیره می‌کند", "state.sh push" in runs)
         check(f"{name}: خروجی را آپلود می‌کند",
@@ -266,7 +271,7 @@ def test_shell_scripts() -> None:
     if not scripts.is_dir():
         return
 
-    for name in ("make-config.sh", "state.sh", "summary.sh"):
+    for name in ("make-config.sh", "state.sh", "summary.sh", "publish.sh"):
         path = scripts / name
         check(f"{name} موجود است", path.exists())
         if not path.exists():
@@ -282,6 +287,15 @@ def test_shell_scripts() -> None:
     check("state.sh: رمزنگاری AES256", "AES256" in state)
     check("state.sh: WAL را ادغام می‌کند", "wal_checkpoint" in state)
     check("state.sh: شاخه را جایگزین می‌کند", "--orphan" in state)
+
+    pub = (scripts / "publish.sh").read_text(encoding="utf-8")
+    check("publish.sh: خروجی خالی را منتشر نمی‌کند", "-s \"$TOP\"" in pub)
+    check("publish.sh: شاخه را جایگزین می‌کند", "push -f" in pub)
+    # checkout روی working tree، اجرای هم‌زمان state.sh را خراب می‌کند
+    check("publish.sh: working tree را دست نمی‌زند",
+          "git checkout" not in pub and "worktree add" not in pub)
+    # CRLF در فایل اشتراک، import را در کلاینت خراب می‌کند
+    check("publish.sh: CRLF را خاموش می‌کند", "core.autocrlf=false" in pub)
 
 
 def test_no_secrets() -> None:

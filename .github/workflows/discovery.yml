@@ -66,6 +66,10 @@ jobs:
           fi
           python live.py "${args[@]}"
 
+      - name: انتشار عمومی
+        if: always()
+        run: bash scripts/publish.sh
+
       - name: ذخیره‌ی حافظه
         if: always()
         env:

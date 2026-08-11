@@ -255,9 +255,81 @@ def test_settings() -> None:
         check("pool.size=0 رد شد", True)
 
 
+def test_link_sanitizer() -> None:
+    """نام تبلیغاتی پاک شود، ولی هیچ فیلد کارکردی عوض نشود."""
+    print("\n[۶] پاک‌سازی نام کانفیگ‌ها")
+    import base64 as _b64
+    import json as _json
+    from vtester.sanitize import clean_name, sanitize_link, sanitize_result_link
+
+    ads = [
+        "vless://%s@1.2.3.4:443?encryption=none&type=ws&security=tls"
+        "&sni=a.com&host=a.com&path=%%2Fw#JOIN%%20@promo%%20t.me/spam" % U,
+        "trojan://pass123@5.6.7.8:8443?security=tls&sni=b.com#🔥 خرید اکانت @shop",
+        "ss://YWVzLTI1Ni1nY206cGFzcw==@9.9.9.9:8388#free t.me/adchan",
+    ]
+    for raw in ads:
+        before = parse_link(raw)
+        out = sanitize_link(raw, "DE-01 | 210ms")
+        after = parse_link(out)
+        same = (before.address == after.address and before.port == after.port
+                and before.protocol == after.protocol
+                and before.fingerprint() == after.fingerprint())
+        check(f"فیلدهای {before.protocol} دست‌نخورده ماند", same,
+              f"{before.address}:{before.port} → {after.address}:{after.port}")
+        check(f"نام {before.protocol} پاک شد", after.remark == "DE-01 | 210ms",
+              repr(after.remark))
+        low = out.lower()
+        check(f"نشتی تبلیغ در {before.protocol} نیست",
+              not any(b in low for b in ("t.me", "@promo", "@shop", "خرید")),
+              out)
+
+    # vmess نام را داخل JSON بیس۶۴ نگه می‌دارد، نه در fragment
+    vm_raw = "vmess://" + _b64.b64encode(_json.dumps({
+        "v": "2", "ps": "@AdChannel t.me/x تبلیغ", "add": "1.1.1.1", "port": "443",
+        "id": U, "aid": "0", "net": "ws", "tls": "tls", "host": "c.com", "path": "/p",
+    }, ensure_ascii=False).encode()).decode()
+    vm_out = sanitize_link(vm_raw, "NL-02 | 90ms")
+    vm_cfg = parse_link(vm_out)
+    check("نام vmess داخل JSON عوض شد", vm_cfg.remark == "NL-02 | 90ms", repr(vm_cfg.remark))
+    check("host/path vmess حفظ شد",
+          vm_cfg.host == "c.com" and vm_cfg.path == "/p",
+          f"{vm_cfg.host} {vm_cfg.path}")
+    check("تبلیغ vmess در بیس۶۴ نماند", "t.me" not in _b64.b64decode(
+        vm_out.split("://", 1)[1] + "===").decode("utf-8", "replace"))
+
+    # قالب نام: پرچم، کد کشور، رتبه‌ی دورقمی، پینگ رند‌شده
+    check("قالب نام درست است",
+          clean_name("DE", 210.4, 1, "") == "🇩🇪 DE-01 | 210ms",
+          clean_name("DE", 210.4, 1, ""))
+    check("کشور نامعلوم هم نام می‌گیرد",
+          clean_name("", None, 7, "") == "XX-07",
+          clean_name("", None, 7, ""))
+    check("برچسب دلخواه اضافه می‌شود",
+          clean_name("NL", 90.0, 2, "MyCh").startswith("MyCh | "),
+          clean_name("NL", 90.0, 2, "MyCh"))
+
+    # لینک ناشناخته/خراب نباید استثنا بدهد یا محتوا را نابود کند
+    for junk in ("", "notalink", "vless://", "hy2://x@1.1.1.1:443#ad t.me/y"):
+        try:
+            sanitize_link(junk, "X-01")
+        except Exception as exc:  # noqa: BLE001
+            check(f"لینک خراب {junk!r} استثنا نداد", False, repr(exc))
+            break
+    else:
+        check("لینک خراب استثنا نداد", True)
+
+    r = result(cfg("4.4.4.4", "@spam t.me/ad"), True, 150.0, time.time())
+    r.country_code = "SE"
+    link = sanitize_result_link(r, rank=3, tag="")
+    check("sanitize_result_link از نتیجه نام می‌سازد",
+          parse_link(link).remark == "🇸🇪 SE-03 | 150ms",
+          parse_link(link).remark)
+
+
 def test_pool_outputs() -> None:
     """فایل‌های خروجی استخر و دسته‌بندی."""
-    print("\n[۶] خروجی‌های استخر")
+    print("\n[۷] خروجی‌های استخر")
     from vtester.pool import PoolManager
 
     root = Path(__file__).resolve().parent
@@ -327,6 +399,50 @@ def test_pool_outputs() -> None:
           str(len(hist["changes"])))
     store.close()
 
+    # ---- همان مسیر، این بار با پاک‌سازی نام روشن ----
+    # این حالتی است که واقعاً منتشر می‌شود (config.ci.yaml)، پس باید روی
+    # فایل‌های نوشته‌شده تست شود نه فقط روی تابع پاک‌سازی.
+    s2 = Settings.load(root=str(root))
+    s2.set("output.dir", str(TMP / "out_clean"))
+    s2.set("output.clean_names", True)
+    s2.set("pool.size", 2)
+    s2.set("pool.batch_size", 2)
+
+    store2 = ConfigStore(TMP / "pool_clean.db")
+    t2 = time.time()
+    ads = [
+        parse_link(f"vless://{U}@8.8.8.{i}:443?encryption=none&type=tcp"
+                   f"#@spam_channel%20t.me/ads%20خرید")
+        for i in range(3)
+    ]
+    store2.upsert_configs_batch(ads)
+    for i, c in enumerate(ads):
+        store2.record_test_result(result(c, True, 120 + i * 10, t2, ip=f"9.9.9.{i}"))
+
+    pool2 = PoolManager(s2, log, store2)
+    pool2.refresh(note="تست پاک‌سازی")
+    w2 = pool2.write_outputs()
+
+    top_txt = Path(w2["top"]).read_text(encoding="utf-8")
+    batch_txt = Path(w2["batch_01"]).read_text(encoding="utf-8")
+    sub_txt = Path(w2["top_sub"]).read_text(encoding="utf-8")
+
+    for label, blob in (("top20", top_txt), ("دسته", batch_txt)):
+        low = blob.lower()
+        check(f"تبلیغ در فایل {label} نیست",
+              not any(b in low for b in ("t.me", "@spam", "خرید")), blob[:120])
+
+    names = [parse_link(l).remark for l in top_txt.strip().splitlines()]
+    check("نام‌های top20 بازنویسی شدند",
+          all(n.endswith("ms") and "-0" in n for n in names), str(names))
+    check("رتبه‌ها از ۱ شمرده شدند",
+          names[0].split("-")[1].startswith("01"), str(names))
+
+    import base64 as _b64
+    decoded = _b64.b64decode(sub_txt).decode("utf-8")
+    check("سابسکریپشن همان لینک‌های تمیز است", decoded.strip() == top_txt.strip())
+    store2.close()
+
 
 def test_backlog() -> None:
     """کانفیگ ثبت‌شده ولی تست‌نشده باید در دورهای بعد برداشته شود.
@@ -335,7 +451,7 @@ def test_backlog() -> None:
     از تلگرام در پایگاه داده نشستند و چون در آن دور دوباره کشف نشدند، هرگز
     تست نمی‌شدند.
     """
-    print("\n[۷] برداشتن کانفیگ‌های تست‌نشده از انبار")
+    print("\n[۸] برداشتن کانفیگ‌های تست‌نشده از انبار")
     from vtester.live import CycleStats, LiveService
 
     settings = Settings.load(root=str(ROOT))
@@ -411,6 +527,7 @@ def main() -> int:
         test_blacklist()
         test_prune_and_geo()
         test_settings()
+        test_link_sanitizer()
         test_pool_outputs()
         test_backlog()
         if "--skip-scale" not in sys.argv:

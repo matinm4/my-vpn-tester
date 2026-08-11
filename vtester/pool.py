@@ -15,6 +15,7 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Sequence, Tuple
 
 from .models import TestResult
+from .sanitize import sanitize_result_link
 
 
 @dataclass
@@ -56,6 +57,11 @@ class PoolManager:
 
         self.out_dir = settings.path_of("output.dir")
         self.history_path = self.out_dir / str(settings.get("pool.history_file", "pool_history.json"))
+
+        # نام کانفیگ‌ها پیش از خروجی بازنویسی می‌شود تا تبلیغ و آی‌دی تلگرام
+        # منبع به کلاینت کاربر نرسد. خاموش‌کردنش نام اصلی منبع را برمی‌گرداند.
+        self.clean_names = bool(settings.get("output.clean_names", False))
+        self.name_tag = str(settings.get("output.name_tag", "") or "")
 
         self._current: List[str] = []          # اثر انگشت اعضای فعلی
         self._history: List[PoolChange] = []
@@ -164,8 +170,7 @@ class PoolManager:
 
         # ---- استخر برتر ----
         top = self.store.get_top_working(limit=self.size, max_age_hours=self.max_age_hours)
-        top_links = [str((r.config or {}).get("raw", "")) for r in top]
-        top_links = [l for l in top_links if l]
+        top_links = self._links_of(top)
 
         top_name = str(self.settings.get("pool.top_file", "top20.txt"))
         path = self.out_dir / top_name
@@ -184,11 +189,26 @@ class PoolManager:
 
         return written
 
+    def _links_of(self, results: Sequence[TestResult], start_rank: int = 1) -> List[str]:
+        """لینک‌های آماده‌ی انتشار — با نام بازنویسی‌شده.
+
+        رتبه از ۱ شمرده می‌شود تا نام کانفیگ در فایل خروجی با جای واقعی‌اش
+        در لیست بخواند («DE-01» یعنی سریع‌ترین).
+        """
+        links: List[str] = []
+        for offset, r in enumerate(results):
+            raw = str((r.config or {}).get("raw", ""))
+            if not raw:
+                continue
+            if self.clean_names:
+                raw = sanitize_result_link(r, rank=start_rank + offset, tag=self.name_tag)
+            links.append(raw)
+        return links
+
     def _write_batches(self, batch_dir: Path) -> Dict[str, Path]:
         """همه‌ی سالم‌ها را به فایل‌های N‌تایی تقسیم می‌کند."""
         all_working = self.store.get_all_working(max_age_hours=self.max_age_hours)
-        links = [str((r.config or {}).get("raw", "")) for r in all_working]
-        links = [l for l in links if l]
+        links = self._links_of(all_working)
 
         batch_dir.mkdir(parents=True, exist_ok=True)
 

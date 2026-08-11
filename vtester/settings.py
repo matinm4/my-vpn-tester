@@ -118,6 +118,10 @@ DEFAULTS: Dict[str, Any] = {
         "sort_by": "latency",
         "include_failed": True,
         "title": "گزارش تست کانفیگ‌های Xray",
+        # پیش‌فرض False تا نسخه‌ی محلی نام اصلی منبع را نگه دارد؛ خروجی
+        # عمومی (config.ci.yaml) صریحاً روشنش می‌کند.
+        "clean_names": False,
+        "name_tag": "",
     },
 }
 

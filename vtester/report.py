@@ -11,6 +11,7 @@ from typing import Any, Dict, List, Optional, Sequence
 
 from .geo import country_label, flag_emoji
 from .models import TestResult
+from .sanitize import clean_name, sanitize_result_link
 
 _TEMPLATE_PATH = Path(__file__).parent / "templates" / "report.html"
 
@@ -33,13 +34,17 @@ def sort_results(results: Sequence[TestResult], sort_by: str = "latency") -> Lis
 # ساخت داده‌ی گزارش
 # ---------------------------------------------------------------------------
 
-def _result_row(result: TestResult, index: int) -> Dict[str, Any]:
+def _result_row(result: TestResult, index: int, clean: bool = False,
+                tag: str = "") -> Dict[str, Any]:
     cfg = result.config or {}
     code = result.country_code or ""
+    name = cfg.get("name") or cfg.get("remark") or "بدون نام"
+    if clean:
+        name = clean_name(code, result.latency_ms, index, tag)
     return {
         "i": index,
         "fingerprint": result.fingerprint,
-        "name": cfg.get("name") or cfg.get("remark") or "بدون نام",
+        "name": name,
         "protocol": cfg.get("protocol", ""),
         "address": cfg.get("address", ""),
         "port": cfg.get("port", 0),
@@ -73,8 +78,9 @@ def _result_row(result: TestResult, index: int) -> Dict[str, Any]:
         "from_cache": result.from_cache,
         "duration_s": round(result.duration_s, 2),
         "tested_at": result.tested_at,
-        "source": cfg.get("source", ""),
-        "link": cfg.get("raw", ""),
+        "source": "" if clean else cfg.get("source", ""),
+        "link": (sanitize_result_link(result, rank=index, tag=tag)
+                 if clean else cfg.get("raw", "")),
     }
 
 
@@ -141,6 +147,8 @@ def build_payload(
     }
 
     now = datetime.now(timezone.utc).astimezone()
+    clean = bool(settings.get("output.clean_names", False))
+    tag = str(settings.get("output.name_tag", "") or "")
     return {
         "generated_at": now.isoformat(timespec="seconds"),
         "generated_at_human": now.strftime("%Y-%m-%d %H:%M:%S"),
@@ -152,7 +160,7 @@ def build_payload(
         "parse_errors": parse_errors[:500],
         "parse_errors_total": len(parse_errors),
         "settings": _effective_settings(settings),
-        "results": [_result_row(r, i + 1) for i, r in enumerate(ordered)],
+        "results": [_result_row(r, i + 1, clean, tag) for i, r in enumerate(ordered)],
     }
 
 
@@ -198,8 +206,15 @@ def write_outputs(payload: Dict[str, Any], results: Sequence[TestResult],
 
     # ---- لیست کانفیگ‌های سالم ----
     ordered_working = [r for r in sort_results(results, "latency") if r.ok]
-    links = [str((r.config or {}).get("raw", "")) for r in ordered_working]
-    links = [l for l in links if l]
+    clean = bool(settings.get("output.clean_names", False))
+    tag = str(settings.get("output.name_tag", "") or "")
+
+    links = []
+    for rank, r in enumerate(ordered_working, start=1):
+        raw = str((r.config or {}).get("raw", ""))
+        if not raw:
+            continue
+        links.append(sanitize_result_link(r, rank=rank, tag=tag) if clean else raw)
 
     working_name = settings.get("output.working_file")
     if working_name:
