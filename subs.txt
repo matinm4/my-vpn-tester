@@ -1,1 +1,2 @@
 https://raw.githubusercontent.com/nftmetamat/test_config/refs/heads/main/a
+https://raw.githubusercontent.com/mahdibland/ShadowsocksAggregator/master/Eternity.txt
