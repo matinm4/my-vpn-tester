@@ -1,0 +1,21 @@
+# رتبه 81 تا 100 (از 146 کانفیگ سالم)
+trojan://FH72359861@magnetic-caiman.rooster465.autos:443?security=tls&sni=magnetic-caiman.rooster465.autos#🇵🇱 PL-81 | 350ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo3ZTczMWVjMy1mOGUxLTQzZjYtOTJjZi0zOTc4ZDE0NzA1YzQ=@r3mrcg001286ek2.cybervena.com:50099#🇹🇼 TW-82 | 350ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@193.29.139.235:8080#🇳🇱 NL-83 | 353ms
+trojan://FH72359861@primary-leech.rooster465.autos:443?security=tls&sni=primary-leech.rooster465.autos#🇵🇱 PL-84 | 376ms
+trojan://FH72359861@many-pangolin.rooster465.autos:443?security=tls&sni=many-pangolin.rooster465.autos#🇯🇵 JP-85 | 379ms
+vmess://eyJhZGQiOiI0Ny4yNTAuNDUuMjM0IiwiYWlkIjowLCJob3N0IjoiIiwiaWQiOiI4MDAzOWI0ZC1iYWMwLTRmODktODJjNy01NGZhZDNiMGExZWEiLCJuZXQiOiJ3cyIsInBhdGgiOiIvYXJraT9lZD0yMDQ4IiwicG9ydCI6ODYxMywicHMiOiLwn4ey8J+HviBNWS04NiB8IDM4MW1zIiwidGxzIjoiIiwidHlwZSI6ImF1dG8iLCJzZWN1cml0eSI6ImF1dG8iLCJza2lwLWNlcnQtdmVyaWZ5Ijp0cnVlLCJzbmkiOiIifQ==
+vmess://eyJhZGQiOiI0Ny4yNTAuNDUuMjM0IiwiYWlkIjowLCJob3N0IjoiIiwiaWQiOiJjNzdmNDhmNS00YmUzLTQ0NjEtYjUyYi00OTk5OGU3Yjg5N2IiLCJuZXQiOiJ3cyIsInBhdGgiOiIvYXJraT9lZD0yMDQ4IiwicG9ydCI6NDMwNjMsInBzIjoi8J+HsvCfh74gTVktODcgfCAzODJtcyIsInRscyI6IiIsInR5cGUiOiJhdXRvIiwic2VjdXJpdHkiOiJhdXRvIiwic2tpcC1jZXJ0LXZlcmlmeSI6dHJ1ZSwic25pIjoiIn0=
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTo5dHFoTWRJclRrZ1E0NlB2aHlBdE1I@switcher-nick-croquet.freesocks.work:443#🇳🇱 NL-88 | 416ms
+trojan://AE62539071@grateful-crawdad.rooster465.autos:443?security=tls#🇯🇵 JP-89 | 417ms
+trojan://AE62539071@inviting-burro.rooster465.autos:443?security=tls&sni=inviting-burro.rooster465.autos#🇯🇵 JP-90 | 418ms
+trojan://ND91608427@thankful-mustang.rooster465.autos:443?security=tls&sni=thankful-mustang.rooster465.autos#🇯🇵 JP-91 | 420ms
+trojan://AE62539071@climbing-frog.rooster465.autos:443?security=tls#🇯🇵 JP-92 | 420ms
+trojan://HC04361579@driven-doberman.rooster465.autos:443?security=tls&sni=driven-doberman.rooster465.autos#🇯🇵 JP-93 | 421ms
+trojan://PQ05174892@ideal-phoenix.rooster465.autos:443?security=tls&sni=ideal-phoenix.rooster465.autos#🇯🇵 JP-94 | 421ms
+trojan://FH72359861@flying-swift.rooster465.autos:443?security=tls&sni=flying-swift.rooster465.autos#🇯🇵 JP-95 | 422ms
+trojan://FH72359861@pretty-adder.rooster465.autos:443?security=tls&sni=pretty-adder.rooster465.autos#🇯🇵 JP-96 | 422ms
+trojan://AE62539071@eager-camel.rooster465.autos:443?security=tls&sni=eager-camel.rooster465.autos#🇯🇵 JP-97 | 423ms
+trojan://AE62539071@easy-barnacle.rooster465.autos:443?security=tls#🇯🇵 JP-98 | 423ms
+trojan://FH72359861@needed-gelding.rooster465.autos:443?security=tls&sni=needed-gelding.rooster465.autos#🇯🇵 JP-99 | 423ms
+trojan://AE62539071@kind-stork.rooster465.autos:443?security=tls&sni=kind-stork.rooster465.autos#🇮🇪 IE-100 | 423ms
