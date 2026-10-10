@@ -1,0 +1,21 @@
+# رتبه 121 تا 140 (از 172 کانفیگ سالم)
+trojan://UX82473651@18.143.92.167:443?security=tls&sni=glowing-marmoset.rooster465.autos#🇸🇬 SG-121 | 620ms
+vmess://eyJhZGQiOiIxNTIuNjcuOC4yMDUiLCJhaWQiOjAsImhvc3QiOiIiLCJpZCI6IjlkYjRjNzA4LWFlZjgtNDM1OS04MjFiLTM4ZTQ3OTkwYmUwZCIsIm5ldCI6IndzIiwicGF0aCI6Ii8iLCJwb3J0Ijo4MCwicHMiOiLwn4eu8J+HsyBJTi0xMjIgfCA2MjhtcyIsInRscyI6IiIsInR5cGUiOiJhdXRvIiwic2VjdXJpdHkiOiJhdXRvIiwic2tpcC1jZXJ0LXZlcmlmeSI6ZmFsc2UsInNuaSI6IjE1Mi42Ny44LjIwNSJ9
+trojan://Trojan%4082164024@gb.tronsg.com:443?security=tls&sni=gb.tronsg.com#🇬🇧 GB-123 | 634ms
+trojan://UX82473651@promoted-rattler.rooster465.autos:443?security=tls&sni=promoted-rattler.rooster465.autos#🇯🇵 JP-124 | 634ms
+trojan://UX82473651@rested-seahorse.rooster465.autos:443?security=tls&sni=rested-seahorse.rooster465.autos#🇸🇬 SG-125 | 689ms
+trojan://UX82473651@fond-mammoth.rooster465.autos:443?security=tls&sni=fond-mammoth.rooster465.autos#🇸🇬 SG-126 | 690ms
+trojan://UX82473651@moral-basilisk.rooster465.autos:443?security=tls&sni=moral-basilisk.rooster465.autos#🇸🇬 SG-127 | 691ms
+vmess://eyJhZGQiOiI1Ny4xMjguMTY0LjIxIiwiYWlkIjowLCJob3N0IjoiaHR0cHMuaHR0cC53d3cubmV0LmNvbS5yYW1zZXl2Mi5pci4iLCJpZCI6IjEwMDI5YzAzLTVkMmYtNDE4NS1hYWIyLWNiZjkxZWVmNzM2MSIsIm5ldCI6IndzIiwicGF0aCI6Ii9kM2QzTG1seVlXNW9iM04wTG1OdmJRPT0/ZWQ9MjU2MCIsInBvcnQiOjgwLCJwcyI6IvCfh6zwn4enIEdCLTEyOCB8IDY5MW1zIiwidGxzIjoiIiwidHlwZSI6ImF1dG8iLCJzZWN1cml0eSI6ImF1dG8iLCJza2lwLWNlcnQtdmVyaWZ5Ijp0cnVlLCJzbmkiOiIifQ==
+trojan://UX82473651@brave-tomcat.rooster465.autos:443?security=tls&sni=brave-tomcat.rooster465.autos#🇸🇬 SG-129 | 692ms
+trojan://UX82473651@intense-wildcat.rooster465.autos:443?security=tls&sni=intense-wildcat.rooster465.autos#🇸🇬 SG-130 | 692ms
+trojan://UX82473651@ace-liger.rooster465.autos:443?security=tls&sni=ace-liger.rooster465.autos#🇸🇬 SG-131 | 693ms
+trojan://UX82473651@inspired-hound.rooster465.autos:443?security=tls&sni=inspired-hound.rooster465.autos#🇸🇬 SG-132 | 694ms
+trojan://UX82473651@simple-molly.rooster465.autos:443?security=tls&sni=simple-molly.rooster465.autos#🇸🇬 SG-133 | 698ms
+trojan://UX82473651@joint-ewe.rooster465.autos:443?security=tls&sni=joint-ewe.rooster465.autos#🇸🇬 SG-134 | 698ms
+trojan://UX82473651@musical-mouse.rooster465.autos:443?security=tls&sni=musical-mouse.rooster465.autos#🇸🇬 SG-135 | 702ms
+trojan://UX82473651@concrete-aardvark.rooster465.autos:443?security=tls&sni=concrete-aardvark.rooster465.autos#🇯🇵 JP-136 | 711ms
+trojan://UX82473651@fancy-javelin.rooster465.autos:443?security=tls&sni=fancy-javelin.rooster465.autos#🇯🇵 JP-137 | 714ms
+trojan://UX82473651@main-fawn.rooster465.autos:443?security=tls&sni=main-fawn.rooster465.autos#🇰🇷 KR-138 | 715ms
+trojan://UX82473651@pleased-albacore.rooster465.autos:443?security=tls&sni=pleased-albacore.rooster465.autos#🇩🇪 DE-139 | 717ms
+ss://YWVzLTI1Ni1nY206ekROVmVkUkZQUWV4Rzl2@51.222.12.127:445#🇨🇦 CA-140 | 717ms
