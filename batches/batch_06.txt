@@ -1,0 +1,21 @@
+# رتبه 101 تا 120 (از 133 کانفیگ سالم)
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@82.38.31.170:443#🇳🇱 NL-101 | 571ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTplOEtnUzhmRDB5RHFZRnBnTjRHNXBpQ090OWFGeXFBMw==@132.243.175.144:8388#🇨🇭 CH-102 | 666ms
+vmess://eyJhZGQiOiIxNzIuNjcuMTM3LjIwOSIsImFpZCI6MCwiaG9zdCI6InVrbC5sb3ZlaGsueHl6IiwiaWQiOiJmNWYwYmFiZS1hZWEyLTRmMDctYTFmYy0zYzk4MjAyNTNmNDkiLCJuZXQiOiJ3cyIsInBhdGgiOiIvTG9uZG9uMzEiLCJwb3J0Ijo0NDMsInBzIjoi8J+HrPCfh6cgR0ItMTAzIHwgNzA0bXMiLCJ0bHMiOiJ0bHMiLCJ0eXBlIjoiYXV0byIsInNlY3VyaXR5IjoiYXV0byIsInNraXAtY2VydC12ZXJpZnkiOmZhbHNlLCJzbmkiOiJ1a2wubG92ZWhrLnh5eiJ9
+vmess://eyJhZGQiOiIxNTIuNjcuOC4yMDUiLCJhaWQiOjAsImhvc3QiOiIiLCJpZCI6IjlkYjRjNzA4LWFlZjgtNDM1OS04MjFiLTM4ZTQ3OTkwYmUwZCIsIm5ldCI6IndzIiwicGF0aCI6Ii8iLCJwb3J0Ijo4MCwicHMiOiLwn4eu8J+HsyBJTi0xMDQgfCA3MDdtcyIsInRscyI6IiIsInR5cGUiOiJhdXRvIiwic2VjdXJpdHkiOiJhdXRvIiwic2tpcC1jZXJ0LXZlcmlmeSI6ZmFsc2UsInNuaSI6IjE1Mi42Ny44LjIwNSJ9
+ss://YWVzLTI1Ni1nY206UmV4bkJnVTdFVjVBRHhH@94.156.250.148:7001#🇬🇧 GB-105 | 716ms
+trojan://UX82473651@brave-tomcat.rooster465.autos:443?security=tls&sni=brave-tomcat.rooster465.autos#🇸🇬 SG-106 | 717ms
+trojan://UX82473651@3.34.131.153:443?security=tls&sni=pretty-rat.rooster465.autos#🇰🇷 KR-107 | 721ms
+vmess://eyJhZGQiOiIxNzIuMTExLjE0Ni42NCIsImFpZCI6MCwiaG9zdCI6IiIsImlkIjoiMDViOGM3ODMtN2Y1OS00N2Y5LTk5MjMtMDZhNDY1Njc5ZjZhIiwibmV0Ijoid3MiLCJwYXRoIjoiL3ZtZXNzLyIsInBvcnQiOjgwLCJwcyI6IvCfh6/wn4e1IEpQLTEwOCB8IDc2Nm1zIiwidGxzIjoiIiwidHlwZSI6ImF1dG8iLCJzZWN1cml0eSI6ImF1dG8iLCJza2lwLWNlcnQtdmVyaWZ5Ijp0cnVlLCJzbmkiOiIifQ==
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@178.83.185.156:8080#🇳🇱 NL-109 | 778ms
+ss://YWVzLTI1Ni1nY206c3hhakNUd3JsSzB6bCt6bUhwWDBwMGpYSWZhdG56bEx6V2xTUTk1MEwxYz0=@103.107.52.106:52351#🇹🇭 TH-110 | 822ms
+trojan://UX82473651@3.1.252.137:443?security=tls&sni=brave-tomcat.rooster465.autos#🇸🇬 SG-111 | 876ms
+trojan://UX82473651@noted-cougar.rooster465.autos:443?security=tls&sni=noted-cougar.rooster465.autos#🇰🇷 KR-112 | 878ms
+ss://YWVzLTI1Ni1nY206ekROVmVkUkZQUWV4Rzl2@51.222.141.125:445#🇨🇦 CA-113 | 919ms
+trojan://UX82473651@musical-mouse.rooster465.autos:443?security=tls&sni=musical-mouse.rooster465.autos#🇸🇬 SG-114 | 954ms
+vmess://eyJhZGQiOiIxNDUuMjM5LjU1LjIxMCIsImFpZCI6MCwiaG9zdCI6Imdvb2dsZS53aGF0c2FwcC5zbmFwcC50b3JvYi5iYXNhbGFtLmZvcnRyZXNzaG9zdC5pci4iLCJpZCI6IjA2N2ZjZDYzLWIyMTUtNGFiZC04NTI5LWFlOTI5YTk5NzFhOSIsIm5ldCI6IndzIiwicGF0aCI6Ii8iLCJwb3J0Ijo4MCwicHMiOiLwn4er8J+HtyBGUi0xMTUgfCA5NThtcyIsInRscyI6IiIsInR5cGUiOiJhdXRvIiwic2VjdXJpdHkiOiJhdXRvIiwic2tpcC1jZXJ0LXZlcmlmeSI6dHJ1ZSwic25pIjoiIn0=
+vmess://eyJhZGQiOiIxNTYuMjQ1LjIzMi4yMzkiLCJhaWQiOjAsImhvc3QiOiIiLCJpZCI6ImIxNWU0ODFkLTE3ZTQtNDFhOC04NGMyLTIzZDRmMDUxNGQ5YSIsIm5ldCI6IndzIiwicGF0aCI6Ii8iLCJwb3J0IjozNTA0MywicHMiOiLwn4et8J+HsCBISy0xMTYgfCAxMDI4bXMiLCJ0bHMiOiIiLCJ0eXBlIjoiYXV0byIsInNlY3VyaXR5IjoiYXV0byIsInNraXAtY2VydC12ZXJpZnkiOnRydWUsInNuaSI6IiJ9
+vmess://eyJhZGQiOiI1NC4zNy4xMzEuMTI2IiwiYWlkIjowLCJob3N0IjoiZ29vZ2xlLndoYXRzYXBwLnNuYXBwLnRvcm9iLmJhc2FsYW0uaGVzYW5pZDguaXIuIiwiaWQiOiI2ZGVlZjlhZC0xMzU3LTQ0M2QtZjk1Yy1jYjE4OTUyYzIwYjMiLCJuZXQiOiJ3cyIsInBhdGgiOiIvIiwicG9ydCI6ODAsInBzIjoi8J+HtfCfh7EgUEwtMTE3IHwgMTAzNm1zIiwidGxzIjoiIiwidHlwZSI6ImF1dG8iLCJzZWN1cml0eSI6ImF1dG8iLCJza2lwLWNlcnQtdmVyaWZ5Ijp0cnVlLCJzbmkiOiIifQ==
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTprMWRCT21PQjRvcWk3VW1wMzdhMWJR@82.38.31.190:8080#🇳🇱 NL-118 | 1064ms
+trojan://UX82473651@moral-basilisk.rooster465.autos:443?security=tls&sni=moral-basilisk.rooster465.autos#🇸🇬 SG-119 | 1277ms
+trojan://UX82473651@optimum-snapper.rooster465.autos:443?security=tls&sni=optimum-snapper.rooster465.autos#🇰🇷 KR-120 | 1354ms

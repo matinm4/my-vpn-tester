@@ -1,0 +1,21 @@
+# رتبه 81 تا 100 (از 133 کانفیگ سالم)
+ss://YWVzLTEyOC1nY206c2hhZG93c29ja3M=@149.22.87.241:443#🇯🇵 JP-81 | 323ms
+ss://YWVzLTI1Ni1nY206aXR6dnBuQDMyMQ==@51.83.192.80:8388#🇵🇱 PL-82 | 330ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTplNWM2NXBo@54.36.174.140:443#🇵🇱 PL-83 | 334ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpRRld6Q3cydVg5QjlpNnFBWWVGQklF@154.46.31.106:443#🇷🇴 RO-84 | 358ms
+ss://YWVzLTI1Ni1nY206M2VPRmVOc3NkZTdQWVlNdg==@84.247.155.196:80#🇯🇵 JP-85 | 371ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpvWklvQTY5UTh5aGNRVjhrYTNQYTNB@82.38.31.159:443#🇳🇱 NL-86 | 381ms
+ss://YWVzLTI1Ni1nY206THBxNVVQVkh0UVlpdUI5akVVTmMyV2tlSVlDVUg5REU=@194.87.196.107:18443#🇷🇺 RU-87 | 391ms
+ss://YWVzLTI1Ni1nY206UmV4bkJnVTdFVjVBRHhH@141.164.45.187:7001#🇰🇷 KR-88 | 402ms
+ss://YWVzLTI1Ni1nY206a0RXdlhZWm9UQmNHa0M0@51.222.136.236:8882#🇨🇦 CA-89 | 403ms
+ss://YWVzLTI1Ni1nY206QmVhVWY5YzBBRVdINDBQdQ==@154.36.158.197:8388#🇯🇵 JP-90 | 406ms
+ss://YWVzLTI1Ni1nY206VEV6amZBWXEySWp0dW9T@141.164.45.187:6679#🇰🇷 KR-91 | 471ms
+vmess://eyJhZGQiOiI0Ny4yNDQuMTIwLjE5NyIsImFpZCI6MCwiaG9zdCI6IjQ3LjI0NC4xMjAuMTk3IiwiaWQiOiJiOWRlMWJjOS1iYWE3LTQxYWMtODZmNy1jY2Q1OTY5NWNiMjEiLCJuZXQiOiJ3cyIsInBhdGgiOiIvYXJraSIsInBvcnQiOjIzMDI2LCJwcyI6IlhYLTkyIHwgNDcxbXMiLCJ0bHMiOiIiLCJ0eXBlIjoiYXV0byIsInNlY3VyaXR5IjoiYXV0byIsInNraXAtY2VydC12ZXJpZnkiOnRydWUsInNuaSI6IiJ9
+trojan://UX82473651@main-fawn.rooster465.autos:443?security=tls&sni=main-fawn.rooster465.autos#🇰🇷 KR-93 | 480ms
+trojan://UX82473651@pretty-rat.rooster465.autos:443?security=tls&sni=pretty-rat.rooster465.autos#🇰🇷 KR-94 | 484ms
+trojan://Trojan@82164024@jp.tronsg.com:443?security=tls#🇯🇵 JP-95 | 485ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpOY0FYYzBVWkk2eVFKRTFwOFFtT3Y4@57.129.113.16:8388#🇩🇪 DE-96 | 490ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpYc3k4T3g0eU9WM3hMbHB4dGp6czNY@102.133.165.160:16233#🇿🇦 ZA-97 | 520ms
+trojan://UX82473651@central-jawfish.rooster465.autos:443?security=tls&sni=central-jawfish.rooster465.autos#🇰🇷 KR-98 | 522ms
+vmess://eyJhZGQiOiI0Ny4yNDQuMTIwLjE5NyIsImFpZCI6MCwiaG9zdCI6IiIsImlkIjoiODQ1ZTZiMDgtMjkxOS00MjkwLWFkZTAtNWRjN2RjZWE1OWNhIiwibmV0Ijoid3MiLCJwYXRoIjoiL2Fya2kiLCJwb3J0Ijo0NDg2NywicHMiOiLwn4et8J+HsCBISy05OSB8IDUzNG1zIiwidGxzIjoiIiwidHlwZSI6ImF1dG8iLCJzZWN1cml0eSI6ImF1dG8iLCJza2lwLWNlcnQtdmVyaWZ5Ijp0cnVlLCJzbmkiOiIifQ==
+trojan://UX82473651@pure-kodiak.rooster465.autos:443?security=tls&sni=pure-kodiak.rooster465.autos#🇰🇷 KR-100 | 561ms
