@@ -1,0 +1,21 @@
+# رتبه 161 تا 180 (از 182 کانفیگ سالم)
+trojan://0ab6c98dae3b48e8b9c4a776b6c9c19a@15.235.184.127:443?security=tls&sni=exploredigitaljobplatformandfindonlinework.com#🇸🇬 SG-161 | 1004ms
+vmess://eyJhZGQiOiIxNTYuMjQ1LjIzMi4yMzkiLCJhaWQiOjAsImhvc3QiOiIiLCJpZCI6ImIxNWU0ODFkLTE3ZTQtNDFhOC04NGMyLTIzZDRmMDUxNGQ5YSIsIm5ldCI6IndzIiwicGF0aCI6Ii8iLCJwb3J0IjozNTA0MywicHMiOiLwn4et8J+HsCBISy0xNjIgfCAxMjE1bXMiLCJ0bHMiOiIiLCJ0eXBlIjoiYXV0byIsInNlY3VyaXR5IjoiYXV0byIsInNraXAtY2VydC12ZXJpZnkiOnRydWUsInNuaSI6IiJ9
+ss://YWVzLTI1Ni1nY206QXhJWVd0c2tKV0lJYWVmVw==@70.34.212.124:8388#🇸🇪 SE-163 | 1226ms
+trojan://d7563108-615c-4338-a7bd-77f359869a4a@sclass-01.catcat321.com:20103?security=tls&sni=hk.catxstar.com#🇳🇬 NG-164 | 1238ms
+trojan://d9064589-74af-432a-9390-5d8a9da281bf@sclass-c2.catcat321.com:20051?security=tls&sni=hk.catxstar.com#XX-165 | 1241ms
+ss://YWVzLTI1Ni1nY206ZzVNZUQ2RnQzQ1dsSklk@51.222.155.32:5003#🇨🇦 CA-166 | 1544ms
+ss://YWVzLTI1Ni1nY206WlJwZ2FCZUd4dEVOSVhndmhwa1pCS3o5R25XUlMyZFljeDlPK2EyaXdOND0=@202.50.253.45:19999#🇮🇹 IT-167 | 1558ms
+trojan://d9064589-74af-432a-9390-5d8a9da281bf@sclass-00.catcat321.com:20123?security=tls&sni=hk.catxstar.com#🇦🇪 AE-168 | 1583ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTplRGZON1NPRFFjZUlPbUlBYnRKSnRL@198.98.53.130:443#🇺🇸 US-169 | 1607ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTprMWRCT21PQjRvcWk3VW1wMzdhMWJR@82.38.31.189:8080#🇳🇱 NL-170 | 1999ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNTpRRld6Q3cydVg5QjlpNnFBWWVGQklF@154.46.31.106:443#XX-171 | 2262ms
+ss://YWVzLTI1Ni1nY206Y2RCSURWNDJEQ3duZklO@51.79.85.185:8118#🇨🇦 CA-172 | 2296ms
+ss://Y2hhY2hhMjAtaWV0Zi1wb2x5MTMwNToyOWlycWswcGFha2N4MTl2@51.83.61.102:8080#🇫🇷 FR-173 | 2297ms
+trojan://0ab6c98dae3b48e8b9c4a776b6c9c19a@216.152.147.79:443?security=tls&sni=blog.connectingpeoplewithgreatjobs.com#🇨🇦 CA-174 | 2831ms
+ss://YWVzLTI1Ni1nY206Qld5UFBUdXNGS2hHZ3pLaA==@64.177.90.30:8388#🇲🇽 MX-175 | 3241ms
+ss://YWVzLTI1Ni1nY206UmV4bkJnVTdFVjVBRHhH@94.156.250.148:7001#🇬🇧 GB-176 | 3534ms
+trojan://0ab6c98dae3b48e8b9c4a776b6c9c19a@208.69.78.33:443?security=tls&sni=courses.yourultimateprofessionalcareerhub.com#🇨🇭 CH-177 | 5770ms
+ss://YWVzLTI1Ni1nY206QU1vazQwRmZhTStJa3dyZTE2cHNCcFZrNkpIeHNRWnc=@209.248.57.105:8388#🇺🇸 US-178 | 5820ms
+trojan://0ab6c98dae3b48e8b9c4a776b6c9c19a@66.163.127.225:443?security=tls&sni=cdn.indyourperfectremotetechjobfromthecomfortofhome.com#🇳🇱 NL-179 | 6193ms
+trojan://d9064589-74af-432a-9390-5d8a9da281bf@sclass-c1.catcat321.com:20086?security=tls&sni=hk.catxstar.com#XX-180 | 6664ms
